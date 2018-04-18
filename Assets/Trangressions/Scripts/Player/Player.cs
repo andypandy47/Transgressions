@@ -32,7 +32,9 @@ public class Player : MonoBehaviour
     public float timeToJumpApex = .4f;
     public float accelerationTimeAirborne = .2f;
     public float accelerationTimeGrounded = .1f;
-    float moveSpeed = 6;
+    public float normalMoveSpeed = 6;
+    public float backwardsWalkMoveSpeed = 3;
+    float moveSpeed;
 
     public Vector2 wallJumpClimb;
     public Vector2 wallJumpOff;
@@ -51,8 +53,11 @@ public class Player : MonoBehaviour
 
     public Vector3 velocity;
     [HideInInspector] public Vector2 directionalInput;
-    [HideInInspector] public bool wallSliding, running, hasHorInput, grounded;
+    [HideInInspector] public bool wallSliding, running, hasHorInput, grounded, resetArms;
+    bool canLand;
     int wallDirX;
+
+    public float test;
 
     void Start()
     {
@@ -103,6 +108,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         CalculateVelocity();
+        HandleMoveSpeed();
         HandleWallSliding();
         SetBools();
         HandleStateLogic();
@@ -127,6 +133,8 @@ public class Player : MonoBehaviour
         }
         else
             hasHorInput = false;
+
+        test = Mathf.Abs(directionalInput.x);
 
         grounded = controller.collisions.below;
 
@@ -168,7 +176,39 @@ public class Player : MonoBehaviour
         {
             state = pState.Running;
         }
+        else if (!grounded && velocity.y > 0)
+        {
+            state = pState.Jumping;
+        }
+        else if (velocity.y < 0 && !grounded)
+        {
+            state = pState.Faling;
+            canLand = true;
+        }
 
+
+
+        //LANDED
+        if (canLand && grounded)
+        {
+            wSystem.inAirShooting = false;
+
+            canLand = false;
+            print("Landed");
+        }
+
+    }
+
+    void HandleMoveSpeed()
+    {
+        if (state == pState.BackwardsWalk)
+        {
+            moveSpeed = backwardsWalkMoveSpeed;
+        }
+        else
+        {
+            moveSpeed = normalMoveSpeed;
+        }
     }
 
     public void SetDirectionalInput(Vector2 input)
@@ -189,6 +229,7 @@ public class Player : MonoBehaviour
 
     public void OnJumpInputDown()
     {
+        wSystem.wState = PlayerWeaponSystem.WeaponState.NoAim;
         if (wallSliding)
         {
             if (wallDirX == directionalInput.x)
@@ -220,6 +261,7 @@ public class Player : MonoBehaviour
             else
             {
                 velocity.y = maxJumpVelocity;
+                state = pState.Jumping;
             }
         }
     }

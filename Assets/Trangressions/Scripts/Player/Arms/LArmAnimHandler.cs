@@ -24,6 +24,7 @@ public class LArmAnimHandler : MonoBehaviour {
         anim.SetBool("DirectionalInput", Mathf.Abs(player.directionalInput.x) > 0 ? true : false);
         anim.SetFloat("XVelocity", Mathf.Abs(player.velocity.x));
         anim.SetBool("Aiming", wSystem.wState == PlayerWeaponSystem.WeaponState.HalfAim || wSystem.wState == PlayerWeaponSystem.WeaponState.FullAim ? true : false);
+        anim.SetBool("ResetArms", player.resetArms);
     }
 
     void LShootEnd()

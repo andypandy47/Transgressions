@@ -20,24 +20,25 @@ public class PlayerAnimHandler : MonoBehaviour {
     private void Update()
     {
         anim.SetFloat("XVelocity", Mathf.Abs(player.velocity.x));
+        anim.SetFloat("YVelocity", player.velocity.y);
         anim.SetBool("DirectionalInput", Mathf.Abs(player.directionalInput.x) > 0 ? true : false);
         anim.SetBool("Grounded", player.controller.collisions.below);
-        anim.SetBool("Shooting", wSystem.lShooting || wSystem.rShooting ? true : false);
+        anim.SetBool("Jumped", player.state == Player.pState.Jumping ? true : false);
 
         anim.SetBool("NoAim", wSystem.wState == PlayerWeaponSystem.WeaponState.NoAim ? true : false);
         anim.SetBool("HalfAim", wSystem.wState == PlayerWeaponSystem.WeaponState.HalfAim ? true : false);
         anim.SetBool("FullAim", wSystem.wState == PlayerWeaponSystem.WeaponState.FullAim ? true : false);
         anim.SetBool("SplitAim", wSystem.wState == PlayerWeaponSystem.WeaponState.SplitAim ? true : false);
+        anim.SetBool("Shooting", wSystem.lShooting || wSystem.rShooting ? true : false);
         anim.SetBool("WalkBackwards", player.state == Player.pState.BackwardsWalk ? true : false);
 
-        if (!player.wallSliding && player.state != Player.pState.BackwardsWalk)
+        if (!player.wallSliding && player.state != Player.pState.BackwardsWalk && !wSystem.hasBackwardsWalked && !wSystem.inAirShooting)
         {
+            
             if (player.velocity.x < 0 && player.dir == Player.Direction.Right)
             {
-               
+                print(wSystem.inAirShooting);
                 Flip(false);
-
-                print(wSystem.hasBackwardsWalked);
             }
 
             if (player.velocity.x > 0 && player.dir == Player.Direction.Left)
