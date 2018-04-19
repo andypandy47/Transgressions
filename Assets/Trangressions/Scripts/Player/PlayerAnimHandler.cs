@@ -37,7 +37,7 @@ public class PlayerAnimHandler : MonoBehaviour {
             
             if (player.velocity.x < 0 && player.dir == Player.Direction.Right)
             {
-                print(wSystem.inAirShooting);
+                //print(wSystem.inAirShooting);
                 Flip(false);
             }
 
@@ -73,6 +73,6 @@ public class PlayerAnimHandler : MonoBehaviour {
             }
         }
         
-        print("Player flip" + " were children not flipped?" + dontFlipChildren);
+        //print("Player flip" + " were children not flipped?" + dontFlipChildren);
     }
 }

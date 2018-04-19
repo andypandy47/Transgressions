@@ -12,6 +12,7 @@ TagManager:
   - PlayerMuzzleFlash
   - Splatter
   - SplatterParent
+  - ExitPoint
   layers:
   - Default
   - TransparentFX

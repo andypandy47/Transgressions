@@ -8,6 +8,9 @@ public class GameController : MonoBehaviour {
 
     Player player;
     GameObject playerObj;
+    GameObject UICanvas;
+
+    PauseMenu pMenu;
 
     private void Awake()
     {
@@ -18,12 +21,15 @@ public class GameController : MonoBehaviour {
         }
         else
             Destroy(gameObject);
+
+        UICanvas = GameObject.FindGameObjectWithTag("UICanvas");
     }
 
     private void Start()
     {
         playerObj = GameObject.FindGameObjectWithTag("Player");
         player = GetComponent<Player>();
+        pMenu = UICanvas.GetComponent<PauseMenu>();
     }
 
     public bool PlayerLost()
@@ -38,8 +44,9 @@ public class GameController : MonoBehaviour {
         }
     }
 
-    public bool PlayerWin()
+    public void PlayerWin()
     {
-        return false;
+        WinConditions.allWinConditionsMet = false;
+        pMenu.Pause(false);
     }
 }
