@@ -8,6 +8,10 @@ TagManager:
   - Enemy
   - Obstacle
   - Platform
+  - CM vcam1
+  - PlayerMuzzleFlash
+  - Splatter
+  - SplatterParent
   layers:
   - Default
   - TransparentFX
@@ -20,7 +24,7 @@ TagManager:
   - Floor
   - Wall
   - Player
-  - 
+  - Enemy
   - 
   - 
   - 
@@ -45,9 +49,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Player
-    uniqueID: 44196489
-    locked: 0
   - name: Background
     uniqueID: 2386422319
+    locked: 0
+  - name: Player
+    uniqueID: 44196489
     locked: 0

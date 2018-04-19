@@ -2,13 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class ObjectPoolItem
+{
+    public GameObject objectToPool;
+    public int amountToPool;
+}
+
 public class ObjectPooler : MonoBehaviour {
 
     public static ObjectPooler sharedInstance;
 
+    public List<ObjectPoolItem> itemsToPool;
     public List<GameObject> pooledObjects;
-    public GameObject objectToPool;
-    public int amountToPool;
+    public GameObject splatter;
+    public int amountToSplatterPool;
+    public List<GameObject> splatterPool;
+
+    GameObject splatterParent;
+    int currentObj = 0;
 
     private void Awake()
     {
@@ -17,24 +29,69 @@ public class ObjectPooler : MonoBehaviour {
 
     private void Start()
     {
-        pooledObjects = new List<GameObject>();
-        for (int i = 0; i < amountToPool; i++)
-        {
-            GameObject obj = (GameObject)Instantiate(objectToPool);
-            obj.SetActive(false);
-            pooledObjects.Add(obj);
-        }
-    }
+        splatterParent = GameObject.FindGameObjectWithTag("SplatterParent");
 
-    public GameObject GetPooledObject()
-    {
-        for (int i = 0; i < pooledObjects.Count; i++)
+        pooledObjects = new List<GameObject>();
+        splatterPool = new List<GameObject>();
+        foreach (ObjectPoolItem item in itemsToPool)
         {
-            if (!pooledObjects[i].activeInHierarchy)
+            for (int i = 0; i < item.amountToPool; i++)
             {
-                return pooledObjects[i];
+                GameObject obj = (GameObject)Instantiate(item.objectToPool);
+                obj.SetActive(false);
+                pooledObjects.Add(obj);
             }
         }
+
+        //Specifically for splatter pooling
+        for (int i = 0; i < amountToSplatterPool; i++)
+        {
+            GameObject obj = Instantiate(splatter, splatterParent.transform);
+            obj.SetActive(false);
+            splatterPool.Add(obj);
+        }
+        
+    }
+
+    public GameObject GetPooledObject(string tag)
+    {
+
+        for (int i = 0; i < pooledObjects.Count; i++)
+        {
+            if (!pooledObjects[i].activeInHierarchy && pooledObjects[i].tag == tag)
+            {
+                return pooledObjects[currentObj];
+            }
+        }
+        return null;
+    }
+
+    public GameObject GetSplatter(string tag)
+    {
+
+        for (int i = 0; i < splatterPool.Count; i++)
+        {
+            if (!splatterPool[currentObj].activeInHierarchy && splatterPool[currentObj].tag == tag)
+            {
+                currentObj++;
+                if (currentObj >= splatterPool.Count)
+                    currentObj = 0;
+
+                return splatterPool[currentObj];
+            }
+            else if (splatterPool[currentObj].activeInHierarchy && splatterPool[currentObj].tag == tag)
+            {
+                currentObj++;
+                if (currentObj >= splatterPool.Count)
+                    currentObj = 0;
+
+                print("Switch to new position");
+                return splatterPool[currentObj];
+
+            }
+
+        }
+
         return null;
     }
 }

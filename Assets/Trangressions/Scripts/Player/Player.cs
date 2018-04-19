@@ -196,7 +196,7 @@ public class Player : MonoBehaviour
             canLand = false;
             print("Landed");
         }
-
+        
     }
 
     void HandleMoveSpeed()
@@ -230,6 +230,15 @@ public class Player : MonoBehaviour
     public void OnJumpInputDown()
     {
         wSystem.wState = PlayerWeaponSystem.WeaponState.NoAim;
+
+        if (dir == Direction.Split)
+        {
+            dir = Direction.Right;
+
+            if (wSystem.lArmFlipped)
+                wSystem.FlipArm(wSystem.LArm, wSystem.normalLeftArmPos);
+        }
+
         if (wallSliding)
         {
             if (wallDirX == directionalInput.x)
