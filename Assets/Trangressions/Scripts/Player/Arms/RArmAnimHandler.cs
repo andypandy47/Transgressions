@@ -17,10 +17,14 @@ public class RArmAnimHandler : MonoBehaviour {
 
     private void Update()
     {
-        anim.SetBool("RShooting", wSystem.rShooting);
-        anim.SetBool("NoAim", wSystem.wState == PlayerWeaponSystem.WeaponState.NoAim ? true : false);
-        anim.SetBool("Aiming", wSystem.wState == PlayerWeaponSystem.WeaponState.HalfAim || wSystem.wState == PlayerWeaponSystem.WeaponState.FullAim ? true : false);
-        anim.SetBool("ResetArms", player.resetArms);
+        if (!player.reset)
+        {
+            anim.SetBool("RShooting", wSystem.rShooting);
+            anim.SetBool("NoAim", wSystem.wState == PlayerWeaponSystem.WeaponState.NoAim ? true : false);
+            anim.SetBool("Aiming", wSystem.wState == PlayerWeaponSystem.WeaponState.HalfAim || wSystem.wState == PlayerWeaponSystem.WeaponState.FullAim ? true : false);
+        }
+        
+        anim.SetBool("ResetArms", player.reset);
     }
 
     void RShootEnd()
@@ -29,5 +33,12 @@ public class RArmAnimHandler : MonoBehaviour {
 
         //if (!wHandler.LShooting)
         //    wHandler.shooting = false;
+    }
+
+    public void ResetAllAnimParams()
+    {
+        anim.SetBool("RShooting", false);
+        anim.SetBool("NoAim", false);
+        anim.SetBool("Aiming", false);
     }
 }

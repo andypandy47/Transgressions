@@ -13,6 +13,9 @@ TagManager:
   - Splatter
   - SplatterParent
   - ExitPoint
+  - UICanvas
+  - TimerBar
+  - SpawnPoint
   layers:
   - Default
   - TransparentFX

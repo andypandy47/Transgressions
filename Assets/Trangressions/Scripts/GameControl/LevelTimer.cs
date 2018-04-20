@@ -5,22 +5,24 @@ using UnityEngine.UI;
 
 public class LevelTimer : MonoBehaviour {
 
-    public static LevelTimer lTime;
+    WinConditions wc;
 
-    public Image timerBar;
+    Image timerBar;
     public float levelTime;
     [HideInInspector] public float currentTime;
 
-    private void Awake()
-    {
-        if (lTime == null)
-            lTime = this;
-    }
-
     private void Start()
     {
+        RestartTimer();
+    }
+
+    public void RestartTimer()
+    {
+        timerBar = GameObject.FindGameObjectWithTag("TimerBar").GetComponent<Image>();
+        wc = GetComponent<WinConditions>();
         currentTime = levelTime;
         UpdateTimerBar();
+        print("Timer reset");
     }
 
     private void Update()
@@ -30,16 +32,24 @@ public class LevelTimer : MonoBehaviour {
 
         if (currentTime <= 0)
         {
-            WinConditions.wc.inTime = false;
+            wc.inTime = false;
         }
         else
-            WinConditions.wc.inTime = true;
+            wc.inTime = true;
     }
 
     void UpdateTimerBar()
     {
         float ratio = Mathf.Clamp(currentTime / levelTime, 0, levelTime);
-        timerBar.rectTransform.localScale = new Vector3(ratio, 1, 1);
+
+        if (timerBar != null)
+            timerBar.rectTransform.localScale = new Vector3(ratio, 1, 1);
+        else
+        {
+            timerBar = GameObject.FindGameObjectWithTag("TimerBar").GetComponent<Image>();
+            print("Couldnt find timer bar");
+        }
+            
     }
 
     public void IncreaseTime(float amount)

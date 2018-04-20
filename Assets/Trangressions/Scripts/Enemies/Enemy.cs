@@ -5,6 +5,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour {
 
     BoxCollider2D collider;
+    LevelTimer lTime;
 
     public enum EnemyType
     {
@@ -15,12 +16,18 @@ public class Enemy : MonoBehaviour {
     public float health;
     [HideInInspector]public Transform bloodPos;
 
-    [HideInInspector] public bool dead;
+    public bool dead;
     public bool isTarget;
+
+    private void Awake()
+    {
+        dead = false;
+    }
 
     private void Start()
     {
         collider = GetComponent<BoxCollider2D>();
+        lTime = GameController.gc.gameObject.GetComponent<LevelTimer>();
         bloodPos = transform.GetChild(0).transform;
     }
 
@@ -39,6 +46,11 @@ public class Enemy : MonoBehaviour {
         dead = true;
         collider.enabled = false;
         ScoreCalculator.sCalc.AddEnemyToScore(eType);
-        LevelTimer.lTime.IncreaseTime(1);
+        lTime.IncreaseTime(1);
+    }
+
+    public void ResetEnemy()
+    {
+        dead = false;
     }
 }

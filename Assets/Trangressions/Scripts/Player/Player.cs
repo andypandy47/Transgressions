@@ -53,7 +53,7 @@ public class Player : MonoBehaviour
 
     public Vector3 velocity;
     [HideInInspector] public Vector2 directionalInput;
-    [HideInInspector] public bool wallSliding, running, hasHorInput, grounded, resetArms;
+    [HideInInspector] public bool wallSliding, running, hasHorInput, grounded, reset;
     bool canLand;
     int wallDirX;
 
@@ -194,7 +194,7 @@ public class Player : MonoBehaviour
             wSystem.inAirShooting = false;
 
             canLand = false;
-            print("Landed");
+            //print("Landed");
         }
         
     }
@@ -329,6 +329,24 @@ public class Player : MonoBehaviour
             velocity.x = 0;
         }
         velocity.y += gravity * Time.deltaTime;
+    }
+
+    public void ResetToSpawnPosition(Transform spawnPointPos)
+    {
+        velocity = Vector3.zero;
+        transform.position = spawnPointPos.position;
+
+        wSystem.lShooting = false;
+        wSystem.rShooting = false;
+        wSystem.wState = PlayerWeaponSystem.WeaponState.NoAim;
+        pAnimHandler.ResetAllAnimParams();
+
+        reset = true;
+
+        if (dir == Direction.Left)
+        {
+            pAnimHandler.Flip(false);
+        }
     }
 
 }

@@ -22,34 +22,64 @@ public class ObjectPooler : MonoBehaviour {
     GameObject splatterParent;
     int currentObj = 0;
 
+    public bool initialLoad = true;
+
     private void Awake()
     {
-        sharedInstance = this;
+        if (sharedInstance == null)
+            sharedInstance = this;
     }
 
     private void Start()
     {
-        splatterParent = GameObject.FindGameObjectWithTag("SplatterParent");
+        RestartPool();
+    }
 
-        pooledObjects = new List<GameObject>();
-        splatterPool = new List<GameObject>();
-        foreach (ObjectPoolItem item in itemsToPool)
+    public void RestartPool()
+    {
+        if (initialLoad)
         {
-            for (int i = 0; i < item.amountToPool; i++)
+            pooledObjects.Clear();
+            splatterParent = GameObject.FindGameObjectWithTag("SplatterParent");
+
+            pooledObjects = new List<GameObject>();
+            splatterPool = new List<GameObject>();
+
+            foreach (ObjectPoolItem item in itemsToPool)
             {
-                GameObject obj = (GameObject)Instantiate(item.objectToPool);
-                obj.SetActive(false);
-                pooledObjects.Add(obj);
+                //print("For each object to pool");
+                for (int i = 0; i < item.amountToPool; i++)
+                {
+                    //print("Pooled" + (i + 1));
+                    GameObject obj = (GameObject)Instantiate(item.objectToPool);
+                    obj.SetActive(false);
+                    pooledObjects.Add(obj);
+                }
             }
+
+            //Specifically for splatter pooling
+            for (int i = 0; i < amountToSplatterPool; i++)
+            {
+                GameObject obj = Instantiate(splatter, splatterParent.transform);
+                obj.SetActive(false);
+                splatterPool.Add(obj);
+            }
+
+            for (int i = 0; i < pooledObjects.Count; i++)
+            {
+                //if (pooledObjects[i].)
+
+                DontDestroyOnLoad(pooledObjects[i].gameObject);
+            }
+
+            for (int i = 0; i < splatterPool.Count; i++)
+            {
+                //DontDestroyOnLoad(splatterPool[i].gameObject);
+            }
+
+            initialLoad = false;
         }
 
-        //Specifically for splatter pooling
-        for (int i = 0; i < amountToSplatterPool; i++)
-        {
-            GameObject obj = Instantiate(splatter, splatterParent.transform);
-            obj.SetActive(false);
-            splatterPool.Add(obj);
-        }
         
     }
 

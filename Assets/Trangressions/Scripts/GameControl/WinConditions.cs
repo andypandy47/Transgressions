@@ -4,27 +4,40 @@ using UnityEngine;
 
 public class WinConditions : MonoBehaviour {
 
+    LevelTimer lTime;
+
     public bool targetKilled;
     public bool reachedExit;
     public bool inTime;
 
-    public static WinConditions wc;
     public static bool allWinConditionsMet;
 
+    GameObject[] enemyGameObjects;
     Enemy[] allEnemies;
     GameObject exitPoint;
 
     private void Awake()
     {
-        if (wc == null)
-        {
-            wc = this;
-        }
+        if (exitPoint == null)
+            exitPoint = GameObject.FindGameObjectWithTag("ExitPoint");
+        if (exitPoint.activeInHierarchy)
+            exitPoint.SetActive(false);
+
+        //RestartWinConditions();
+        //ResetConditions();
+        //print("win condition awake");
     }
 
     private void Start()
     {
-        GameObject[] enemyGameObjects;
+        //print("WinCondition start");
+        RestartWinConditions();
+    }
+
+    public void RestartWinConditions()
+    {
+        lTime = GetComponent<LevelTimer>();
+
         enemyGameObjects = GameObject.FindGameObjectsWithTag("Enemy");
 
         allEnemies = new Enemy[enemyGameObjects.Length];
@@ -34,13 +47,17 @@ public class WinConditions : MonoBehaviour {
             allEnemies[i] = enemyGameObjects[i].GetComponent<Enemy>();
         }
 
-        exitPoint = GameObject.FindGameObjectWithTag("ExitPoint");
-        exitPoint.SetActive(false);
+        if (exitPoint == null)
+        {
+            exitPoint = GameObject.FindGameObjectWithTag("ExitPoint");
+        }
+
+        print("Restart winConditions");
     }
 
     private void Update()
     {
-        if (!allWinConditionsMet)
+        if (!allWinConditionsMet && !PauseMenu.isPaused)
         {
             for (int i = 0; i < allEnemies.Length; i++)
             {
@@ -48,10 +65,11 @@ public class WinConditions : MonoBehaviour {
                 {
                     targetKilled = true;
                     ActivateExitPoint();
+                    //print("Target is dead");
                 }
             }
 
-            if (LevelTimer.lTime.currentTime > 0)
+            if (lTime.currentTime > 0)
             {
                 inTime = true;
             }
@@ -60,20 +78,39 @@ public class WinConditions : MonoBehaviour {
             {
                 allWinConditionsMet = true;
                 GameController.gc.PlayerWin();
-                ResetConditions();
+               // ResetConditions();
             }
         }
+        if (exitPoint == null)
+        {
+            exitPoint = GameObject.FindGameObjectWithTag("ExitPoint");
+            
+        }
+
     }
 
     void ActivateExitPoint()
     {
-        exitPoint.SetActive(true);
+        //exitPoint.SetActive(true);
     }
 
-    void ResetConditions()
+    public void ResetConditions()
     {
         targetKilled = false;
         reachedExit = false;
         inTime = false;
+
+        for (int i = 0; i < allEnemies.Length; i++)
+        {
+            allEnemies[i].ResetEnemy();
+        }
+
+        print("Reset conditions " + targetKilled);
+    }
+
+    private void OnDestroy()
+    {
+        //print("Winconditions disabled");
+       // ResetConditions();
     }
 }

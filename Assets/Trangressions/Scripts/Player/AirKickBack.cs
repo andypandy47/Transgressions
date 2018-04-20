@@ -23,7 +23,7 @@ public class AirKickBack : MonoBehaviour {
         player.velocity.x = kickBackDir * kickBack.x;
         player.velocity.y = kickBack.y;
 
-        print("Kickback");
+        //print("Kickback");
 
 
     }

@@ -4,12 +4,20 @@ using UnityEngine;
 
 public class ExitPoint : MonoBehaviour {
 
+    WinConditions wc;
+
+    private void Start()
+    {
+        wc = GameController.gc.gameObject.GetComponent<WinConditions>();
+        gameObject.SetActive(false);
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Player")
         {
             print("Exit point reached");
-            WinConditions.wc.reachedExit = true;
+            wc.reachedExit = true;
         }
     }
 }

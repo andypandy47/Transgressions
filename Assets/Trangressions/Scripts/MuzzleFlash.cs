@@ -11,8 +11,7 @@ public class MuzzleFlash : MonoBehaviour {
 
     private void Start()
     {
-        wSystem = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerWeaponSystem>();
-        
+        wSystem = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerWeaponSystem>();        
     }
 
     private void OnEnable()
@@ -33,6 +32,11 @@ public class MuzzleFlash : MonoBehaviour {
         {
             timer -= Time.deltaTime;
         }
+    }
+
+    private void OnDisable()
+    {
+        //transform.parent = null;
     }
 
     void Flip()
