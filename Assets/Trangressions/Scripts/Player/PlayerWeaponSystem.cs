@@ -533,7 +533,7 @@ public class PlayerWeaponSystem : MonoBehaviour {
         if (lHit || rHit)
         {
             RaycastHit2D hit = lHit ? lHit : rHit;
-
+            print("Hit " + hit.collider.name);
             if (hit.collider.tag == "Enemy")
             {
                 if (!GotEnemy(hit.collider))

@@ -9,6 +9,7 @@ public class PlatformController : RaycastController
 
     public Vector3[] localWaypoints;
     Vector3[] globalWaypoints;
+    Vector3 velocity;
 
     public float speed;
     public bool cyclic;
@@ -17,11 +18,15 @@ public class PlatformController : RaycastController
     public float easeAmount;
 
     int fromWaypointIndex;
+    int toWaypointIndex;
     float percentBetweenWaypoints;
     float nextMoveTime;
+    bool resetting;
 
     List<PassengerMovement> passengerMovement;
     Dictionary<Transform, Controller2D> passengerDictionary = new Dictionary<Transform, Controller2D>();
+
+    [HideInInspector] public Vector3 startingPos;
 
     public override void Start()
     {
@@ -36,16 +41,39 @@ public class PlatformController : RaycastController
 
     void Update()
     {
+        if (!resetting)
+        {
+            UpdateRaycastOrigins();
 
-        UpdateRaycastOrigins();
+            velocity = CalculatePlatformMovement();
 
-        Vector3 velocity = CalculatePlatformMovement();
 
-        CalculatePassengerMovement(velocity);
+            CalculatePassengerMovement(velocity);
 
-        MovePassengers(true);
-        transform.Translate(velocity);
-        MovePassengers(false);
+
+            MovePassengers(true);
+
+            transform.Translate(velocity);
+            MovePassengers(false);
+        }
+        else
+            velocity = Vector3.zero;
+        
+    }
+
+    public IEnumerator ResetPlatform()
+    {
+        resetting = true;
+        velocity = Vector3.zero;
+        percentBetweenWaypoints = 0;
+        fromWaypointIndex = 0;
+        toWaypointIndex = 1;
+        nextMoveTime = Time.time;
+        transform.position = globalWaypoints[0];
+        yield return new WaitForSeconds(0.1f);
+        resetting = false;
+
+        print("ResetPlatform");
     }
 
     float Ease(float x)
@@ -56,14 +84,13 @@ public class PlatformController : RaycastController
 
     Vector3 CalculatePlatformMovement()
     {
-
         if (Time.time < nextMoveTime)
         {
             return Vector3.zero;
         }
 
         fromWaypointIndex %= globalWaypoints.Length;
-        int toWaypointIndex = (fromWaypointIndex + 1) % globalWaypoints.Length;
+        toWaypointIndex = (fromWaypointIndex + 1) % globalWaypoints.Length;
         float distanceBetweenWaypoints = Vector3.Distance(globalWaypoints[fromWaypointIndex], globalWaypoints[toWaypointIndex]);
         percentBetweenWaypoints += Time.deltaTime * speed / distanceBetweenWaypoints;
         percentBetweenWaypoints = Mathf.Clamp01(percentBetweenWaypoints);
@@ -86,6 +113,19 @@ public class PlatformController : RaycastController
             }
             nextMoveTime = Time.time + waitTime;
         }
+
+        if (resetting)
+        {
+            fromWaypointIndex = 0;
+            toWaypointIndex = 1;
+            distanceBetweenWaypoints = 0;
+            percentBetweenWaypoints = 0;
+            easedPercentBetweenWaypoints = 0;
+            newPos = Vector3.zero;
+            nextMoveTime = Time.time;
+            return Vector3.zero;
+        }
+
 
         return newPos - transform.position;
     }

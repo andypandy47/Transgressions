@@ -90,7 +90,7 @@ public class ObjectPooler : MonoBehaviour {
         {
             if (!pooledObjects[i].activeInHierarchy && pooledObjects[i].tag == tag)
             {
-                return pooledObjects[currentObj];
+                return pooledObjects[i];
             }
         }
         return null;
@@ -98,7 +98,6 @@ public class ObjectPooler : MonoBehaviour {
 
     public GameObject GetSplatter(string tag)
     {
-
         for (int i = 0; i < splatterPool.Count; i++)
         {
             if (!splatterPool[currentObj].activeInHierarchy && splatterPool[currentObj].tag == tag)
@@ -115,13 +114,17 @@ public class ObjectPooler : MonoBehaviour {
                 if (currentObj >= splatterPool.Count)
                     currentObj = 0;
 
-                print("Switch to new position");
                 return splatterPool[currentObj];
-
             }
-
         }
-
         return null;
+    }
+
+    public void ResetSplatters()
+    {
+        for (int i = 0; i < splatterPool.Count; i++)
+        {
+            splatterPool[i].SetActive(false);
+        }
     }
 }

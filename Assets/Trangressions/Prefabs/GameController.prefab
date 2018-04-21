@@ -1,0 +1,165 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1263179748166484}
+  m_IsPrefabParent: 1
+--- !u!1 &1263179748166484
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4184003216001956}
+  - component: {fileID: 114385669365795812}
+  - component: {fileID: 114023602641493558}
+  - component: {fileID: 114683877013649472}
+  - component: {fileID: 114658302088314124}
+  - component: {fileID: 114856049353870058}
+  - component: {fileID: 114078224266754986}
+  - component: {fileID: 114489594605443852}
+  - component: {fileID: 114182018132346328}
+  m_Layer: 0
+  m_Name: GameController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4184003216001956
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1263179748166484}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114023602641493558
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1263179748166484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fd3ad92ba861f94baa90b9926411514, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemsToPool:
+  - objectToPool: {fileID: 1255514729502140, guid: eb847847e0d704a4c9d1ca517ad44104,
+      type: 2}
+    amountToPool: 2
+  pooledObjects: []
+  splatter: {fileID: 1677868404810284, guid: c08cd246f3bb1c74a97263c1e7aae0bc, type: 2}
+  amountToSplatterPool: 100
+  splatterPool: []
+  initialLoad: 1
+--- !u!114 &114078224266754986
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1263179748166484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 305879bdeca61ac40bc9843ec0c4eb4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nbKilled: 0
+  killScore: 0
+  levelCompleteScore: 1000
+  AGradeScore: 3100
+  BGradeScore: 2600
+  CGradeScore: 2000
+  DGradeScore: 1500
+--- !u!114 &114182018132346328
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1263179748166484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25235368468d79c4ca47111a9072eece, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114385669365795812
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1263179748166484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51059d63bd302a34fbba8728c03817a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lTime: {fileID: 0}
+  wc: {fileID: 0}
+--- !u!114 &114489594605443852
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1263179748166484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 122ffb048ba9ab949b4d8e3a1cab7f8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetKilled: 0
+  reachedExit: 0
+  inTime: 0
+  playerLost: 0
+--- !u!114 &114658302088314124
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1263179748166484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c477196ade2c5d429556525444a60de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bloodEffects:
+  - {fileID: 1064879316367512, guid: ec2319822ecc0f74281e056baaeb7437, type: 2}
+  activeBloodSprites: []
+--- !u!114 &114683877013649472
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1263179748166484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 904670aa554449942a6b0142ff7aa650, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114856049353870058
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1263179748166484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9aff800a8c21dfb428bb0c430ec8d6d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelTime: 5
+  debugging: 0
+  currentTime: 0

@@ -9,6 +9,7 @@ public class WinConditions : MonoBehaviour {
     public bool targetKilled;
     public bool reachedExit;
     public bool inTime;
+    public bool playerLost;
 
     public static bool allWinConditionsMet;
 
@@ -22,15 +23,10 @@ public class WinConditions : MonoBehaviour {
             exitPoint = GameObject.FindGameObjectWithTag("ExitPoint");
         if (exitPoint.activeInHierarchy)
             exitPoint.SetActive(false);
-
-        //RestartWinConditions();
-        //ResetConditions();
-        //print("win condition awake");
     }
 
     private void Start()
-    {
-        //print("WinCondition start");
+    {   
         RestartWinConditions();
     }
 
@@ -52,23 +48,32 @@ public class WinConditions : MonoBehaviour {
             exitPoint = GameObject.FindGameObjectWithTag("ExitPoint");
         }
 
-        print("Restart winConditions");
+        print("Win conditions start");
     }
 
     private void Update()
     {
+        if (exitPoint == null)
+        {
+            exitPoint = GameObject.FindGameObjectWithTag("ExitPoint");
+            print("Exitpoint was null");
+        }
+
         if (!allWinConditionsMet && !PauseMenu.isPaused)
         {
-            for (int i = 0; i < allEnemies.Length; i++)
+            if (!targetKilled)
             {
-                if (allEnemies[i].isTarget && allEnemies[i].dead)
+                for (int i = 0; i < allEnemies.Length; i++)
                 {
-                    targetKilled = true;
-                    ActivateExitPoint();
-                    //print("Target is dead");
+                    if (allEnemies[i].isTarget && allEnemies[i].dead)
+                    {
+                        targetKilled = true;
+                        print("Target is dead");
+                        ActivateExitPoint();
+                    }
                 }
             }
-
+            
             if (lTime.currentTime > 0)
             {
                 inTime = true;
@@ -78,20 +83,14 @@ public class WinConditions : MonoBehaviour {
             {
                 allWinConditionsMet = true;
                 GameController.gc.PlayerWin();
-               // ResetConditions();
             }
         }
-        if (exitPoint == null)
-        {
-            exitPoint = GameObject.FindGameObjectWithTag("ExitPoint");
-            
-        }
-
     }
 
     void ActivateExitPoint()
     {
-        //exitPoint.SetActive(true);
+        exitPoint.SetActive(true);
+        print("Activate the exitpoint");
     }
 
     public void ResetConditions()
@@ -99,18 +98,18 @@ public class WinConditions : MonoBehaviour {
         targetKilled = false;
         reachedExit = false;
         inTime = false;
+        playerLost = false;
+        allWinConditionsMet = false;
 
         for (int i = 0; i < allEnemies.Length; i++)
         {
             allEnemies[i].ResetEnemy();
         }
 
-        print("Reset conditions " + targetKilled);
-    }
+        if (exitPoint.activeInHierarchy)
+            exitPoint.SetActive(false);
 
-    private void OnDestroy()
-    {
-        //print("Winconditions disabled");
-       // ResetConditions();
+        print("Reset wincondition variables ");
     }
+ 
 }

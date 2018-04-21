@@ -7,6 +7,7 @@ public class BloodEffectsController : MonoBehaviour {
     public static BloodEffectsController bFXController;
 
     public GameObject[] bloodEffects;
+    public GameObject bloodPSystem;
     public List<GameObject> activeBloodSprites;
 
     private void Awake()
@@ -26,15 +27,19 @@ public class BloodEffectsController : MonoBehaviour {
             rightOfEnemy = false;
 
         GameObject effect = Instantiate(bloodEffects[0], enemy.transform);
+        GameObject pSystem = Instantiate(bloodPSystem, enemy.transform);
 
         if (rightOfEnemy)
         {
             enemy.bloodPos.localPosition = new Vector3(-enemy.bloodPos.localPosition.x, enemy.bloodPos.localPosition.y, 0);
+            pSystem.transform.eulerAngles = new Vector3(0, -90, 0);
             Flip(effect);
         }
 
         effect.transform.position = enemy.bloodPos.position;
+        pSystem.transform.position = enemy.transform.position;
         activeBloodSprites.Add(effect);
+        Destroy(pSystem, 1);
     }
 
     void Flip(GameObject sprite)

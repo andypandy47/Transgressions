@@ -9,7 +9,6 @@ public class ExitPoint : MonoBehaviour {
     private void Start()
     {
         wc = GameController.gc.gameObject.GetComponent<WinConditions>();
-        gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

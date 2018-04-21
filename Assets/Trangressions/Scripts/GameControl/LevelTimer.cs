@@ -9,6 +9,7 @@ public class LevelTimer : MonoBehaviour {
 
     Image timerBar;
     public float levelTime;
+    public bool debugging;
     [HideInInspector] public float currentTime;
 
     private void Start()
@@ -27,7 +28,9 @@ public class LevelTimer : MonoBehaviour {
 
     private void Update()
     {
-        currentTime -= Time.deltaTime;
+        if (!debugging)
+            currentTime -= Time.deltaTime;
+
         UpdateTimerBar();
 
         if (currentTime <= 0)

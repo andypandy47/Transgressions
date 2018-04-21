@@ -8,9 +8,13 @@ public class ScoreCalculator : MonoBehaviour {
 
     LevelTimer timer;
 
-    [HideInInspector] public int nbKilled;
-
-    int score = 0;
+    [HideInInspector] public int nbKilled, killScore;
+    public int levelCompleteScore;
+    public int AGradeScore;
+    public int BGradeScore;
+    public int CGradeScore;
+    public int DGradeScore;
+    
     int finalScore;
 
     private void Awake()
@@ -24,20 +28,47 @@ public class ScoreCalculator : MonoBehaviour {
         timer = GetComponent<LevelTimer>();
     }
 
-    public int CalculateScore()
+    public int CalculateTimeScore()
     {
-        int timeScore = Mathf.RoundToInt(timer.currentTime);
+        int timeScore = Mathf.RoundToInt(timer.currentTime * 1000);
 
-        finalScore = timeScore + score;
-
-        return finalScore;
+        return timeScore;
     }
 
     public void AddEnemyToScore(Enemy.EnemyType eType)
     {
         if (eType == Enemy.EnemyType.NonBeleiver)
         {
-            score += 100;
+            killScore += 250;
         }
+    }
+
+    public string CalculateRank()
+    {
+        finalScore = levelCompleteScore + CalculateTimeScore() + killScore;
+
+        if (finalScore >= AGradeScore)
+        {
+            return ("A");
+        }
+        else if (finalScore >= BGradeScore)
+        {
+            return ("B");
+        }
+        else if (finalScore >= CGradeScore)
+        {
+            return ("C");
+        }
+        else if (finalScore >= DGradeScore)
+        {
+            return ("D");
+        }
+        else
+            return null;
+    }
+
+    public void ResetScore()
+    {
+        killScore = 0;
     }
 }

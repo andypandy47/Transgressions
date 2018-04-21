@@ -13,7 +13,8 @@ public class Enemy : MonoBehaviour {
     }
     public EnemyType eType;
 
-    public float health;
+    public float startingHealth;
+    float health;
     [HideInInspector]public Transform bloodPos;
 
     public bool dead;
@@ -29,6 +30,8 @@ public class Enemy : MonoBehaviour {
         collider = GetComponent<BoxCollider2D>();
         lTime = GameController.gc.gameObject.GetComponent<LevelTimer>();
         bloodPos = transform.GetChild(0).transform;
+
+        health = startingHealth;
     }
 
     public void DamageEnemy(float damage)
@@ -52,5 +55,12 @@ public class Enemy : MonoBehaviour {
     public void ResetEnemy()
     {
         dead = false;
+        health = startingHealth;
+
+        bloodPos.localPosition = new Vector3(0.75f, 0.34f, 0); 
+        if (collider.enabled == false)
+        {
+            collider.enabled = true;
+        }
     }
 }
