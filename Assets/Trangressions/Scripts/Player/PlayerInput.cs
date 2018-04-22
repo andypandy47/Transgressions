@@ -40,6 +40,10 @@ public class PlayerInput : MonoBehaviour
                 //Left mouse input
                 wSystem.LeftWeaponInput();
             }
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                GameController.gc.StartCoroutine(GameController.gc.RestartLevel());
+            }
         }
         
         if (Input.GetKeyDown(KeyCode.Escape))

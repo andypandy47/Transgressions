@@ -9,8 +9,8 @@ public class PlayerAnimHandler : MonoBehaviour {
     PlayerWeaponSystem wSystem;
     Controller2D controller;
 
-    RArmAnimHandler rArmAnim;
-    LArmAnimHandler lArmAnim;
+    public RArmAnimHandler rArmAnim;
+    public LArmAnimHandler lArmAnim;
 
     private void Start()
     {

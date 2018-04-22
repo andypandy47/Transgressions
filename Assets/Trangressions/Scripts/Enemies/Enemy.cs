@@ -34,22 +34,23 @@ public class Enemy : MonoBehaviour {
         health = startingHealth;
     }
 
-    public void DamageEnemy(float damage)
+    public void DamageEnemy(float damage, Player player)
     {
         health -= damage;
 
-        if (health <= 0)
+        if (health <= 0 && !dead)
         {
-            KillEnemy();
+            KillEnemy(player);
         }
     }
 
-    public void KillEnemy()
+    public void KillEnemy(Player player)
     {
         dead = true;
         collider.enabled = false;
         ScoreCalculator.sCalc.AddEnemyToScore(eType);
         lTime.IncreaseTime(1);
+        BloodEffectsController.bFXController.SpawnBloodEffect(this, player);
     }
 
     public void ResetEnemy()

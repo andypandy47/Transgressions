@@ -141,7 +141,7 @@ MonoBehaviour:
   startingHealth: 100
   bloodPos: {fileID: 0}
   dead: 0
-  isTarget: 1
+  isTarget: 0
 --- !u!212 &212203615198492920
 SpriteRenderer:
   m_ObjectHideFlags: 1

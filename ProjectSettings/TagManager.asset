@@ -16,6 +16,7 @@ TagManager:
   - UICanvas
   - TimerBar
   - SpawnPoint
+  - SpikeTrap
   layers:
   - Default
   - TransparentFX
@@ -29,7 +30,7 @@ TagManager:
   - Wall
   - Player
   - Enemy
-  - 
+  - Trap
   - 
   - 
   - 

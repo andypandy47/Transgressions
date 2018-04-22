@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 114974321198746318}
   - component: {fileID: 114971150115795432}
   - component: {fileID: 114768691038811084}
+  - component: {fileID: 114182138543745300}
   - component: {fileID: 114233217227315774}
   - component: {fileID: 95129306742357764}
   - component: {fileID: 212889211905346904}
@@ -278,6 +279,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff32a13b3f0a7be41ac66f5ccd3beb6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114182138543745300
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1440477903142126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d9638bb65b2b5a43ada3f6478638718, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeedIncreaseAmount: 0.1
+  groundAccelIncreaseAmount: 0.03
+  airAccelIncreaseAmount: 0.01
 --- !u!114 &114195327053496532
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -312,6 +327,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 0}
+  rArmAnim: {fileID: 0}
+  lArmAnim: {fileID: 0}
 --- !u!114 &114392553968734808
 MonoBehaviour:
   m_ObjectHideFlags: 1

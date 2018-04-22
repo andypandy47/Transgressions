@@ -37,8 +37,9 @@ public class PlayerWeaponSystem : MonoBehaviour {
     [HideInInspector] public Vector3 splitShootLeftArmPos = new Vector3(-.302f, -0.278f, 0), normalLeftArmPos = new Vector3(0.186f, -0.261f, 0);
     Vector3 pScale;
 
-    public RaycastHit2D lHit;
-    public RaycastHit2D rHit;
+    // public RaycastHit2D lHit;
+    // public RaycastHit2D rHit;
+    public RaycastHit2D hit;
     public LayerMask whatToHit;
 
     Enemy enemy;
@@ -516,33 +517,31 @@ public class PlayerWeaponSystem : MonoBehaviour {
     {
         if (weapon == right)
         {
-            rHit = Physics2D.Raycast(muzzlePoint.position, player.dir == Player.Direction.Right || player.dir == Player.Direction.Split ? Vector2.right : Vector2.left, range, whatToHit);
+            hit = Physics2D.Raycast(muzzlePoint.position, player.dir == Player.Direction.Right || player.dir == Player.Direction.Split ? Vector2.right : Vector2.left, range, whatToHit);
             Debug.DrawRay(muzzlePoint.position, player.dir == Player.Direction.Right || player.dir == Player.Direction.Split ? Vector2.right * range : Vector2.left * range, Color.cyan);
         }
         else if (weapon == left && !splitShot)
         {
-            lHit = Physics2D.Raycast(muzzlePoint.position, player.dir == Player.Direction.Left && player.dir != Player.Direction.Split ? Vector2.left : Vector2.right, range, whatToHit);
+            hit = Physics2D.Raycast(muzzlePoint.position, player.dir == Player.Direction.Left && player.dir != Player.Direction.Split ? Vector2.left : Vector2.right, range, whatToHit);
             Debug.DrawRay(muzzlePoint.position, player.dir == Player.Direction.Left && player.dir != Player.Direction.Split ? Vector2.left * range : Vector2.right * range, Color.magenta);
         }
         else if (weapon == left && splitShot)
         {
-            lHit = Physics2D.Raycast(muzzlePointSplit.position, Vector2.left, range, whatToHit);
+            hit = Physics2D.Raycast(muzzlePointSplit.position, Vector2.left, range, whatToHit);
             Debug.DrawRay(muzzlePointSplit.position,Vector2.left * range, Color.magenta);
         }
 
-        if (lHit || rHit)
+        if (hit)
         {
-            RaycastHit2D hit = lHit ? lHit : rHit;
             print("Hit " + hit.collider.name);
             if (hit.collider.tag == "Enemy")
             {
-                if (!GotEnemy(hit.collider))
+                /*if (!GotEnemy(hit.collider))
                 {
                     enemy = hit.collider.GetComponent<Enemy>();
-                }
-
-                enemy.DamageEnemy(100f);
-                BloodEffectsController.bFXController.SpawnBloodEffect(enemy, player);
+                }*/
+                enemy = hit.collider.GetComponent<Enemy>();
+                enemy.DamageEnemy(100f, player);
 
             }
         }

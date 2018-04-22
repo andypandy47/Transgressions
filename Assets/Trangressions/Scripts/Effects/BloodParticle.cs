@@ -36,6 +36,12 @@ public class BloodParticle : MonoBehaviour {
             {
                 splat.transform.position = collisionHitLoc;
                 splat.transform.rotation = Quaternion.identity;
+                
+                if (collisionEvents[i].colliderComponent.tag == "Platform")
+                {
+                    splat.transform.parent = collisionEvents[i].colliderComponent.transform;
+                }
+
                 if (!splat.activeInHierarchy)
                     splat.SetActive(true);
             }

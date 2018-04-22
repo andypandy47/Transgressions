@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 {
     PlayerWeaponSystem wSystem;
     PlayerAnimHandler pAnimHandler;
+    PlayerMovementIncrease moveIncrease;
 
     public enum Direction
     {
@@ -34,13 +35,13 @@ public class Player : MonoBehaviour
     public float accelerationTimeGrounded = .1f;
     public float normalMoveSpeed = 6;
     public float backwardsWalkMoveSpeed = 3;
-    float moveSpeed;
+    float moveSpeed = 6;
 
     public Vector2 wallJumpClimb;
     public Vector2 wallJumpOff;
     public Vector2 wallLeap;
 
-    public float wallSlideSpeedMax = 3;
+    public float wallSlideSpeedMax = 5;
     public float wallStickTime = .25f;
     float timeToWallUnstick;
 
@@ -64,6 +65,7 @@ public class Player : MonoBehaviour
         controller = GetComponent<Controller2D>();
         wSystem = GetComponent<PlayerWeaponSystem>();
         pAnimHandler = GetComponent<PlayerAnimHandler>();
+        moveIncrease = GetComponent<PlayerMovementIncrease>();
 
         gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);
         maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
@@ -107,8 +109,17 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+
+        if (Mathf.Abs(directionalInput.x) > 0)
+        {
+            hasHorInput = true;
+        }
+        else
+            hasHorInput = false;
+
+        moveIncrease.MoveIncrease(ref accelerationTimeGrounded, ref accelerationTimeAirborne, ref moveSpeed, directionalInput.x);
         CalculateVelocity();
-        HandleMoveSpeed();
+        //HandleMoveSpeed();
         HandleWallSliding();
         SetBools();
         HandleStateLogic();
@@ -127,12 +138,6 @@ public class Player : MonoBehaviour
             }
         }
 
-        if (Mathf.Abs(directionalInput.x) > 0)
-        {
-            hasHorInput = true;
-        }
-        else
-            hasHorInput = false;
 
         test = Mathf.Abs(directionalInput.x);
 
@@ -183,6 +188,8 @@ public class Player : MonoBehaviour
         else if (velocity.y < 0 && !grounded)
         {
             state = pState.Faling;
+           // pAnimHandler.lArmAnim.ResetAllAnimParams();
+            //pAnimHandler.rArmAnim.ResetAllAnimParams();
             canLand = true;
         }
 
@@ -335,6 +342,8 @@ public class Player : MonoBehaviour
     {
         velocity = Vector3.zero;
         transform.position = spawnPointPos.position;
+        moveSpeed = 6;
+        accelerationTimeGrounded = 0.1f;
 
         wSystem.lShooting = false;
         wSystem.rShooting = false;
@@ -343,10 +352,18 @@ public class Player : MonoBehaviour
 
         reset = true;
 
+        if (!alive)
+            alive = true;
+
         if (dir == Direction.Left)
         {
             pAnimHandler.Flip(false);
         }
+        else
+        {
+            dir = Direction.Right;
+        }
+        state = pState.Stationary;
     }
 
 }
