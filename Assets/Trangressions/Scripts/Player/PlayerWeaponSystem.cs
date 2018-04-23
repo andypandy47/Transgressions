@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerWeaponSystem : MonoBehaviour {
 
+    Controller2D controller;
     Player player;
     PlayerAnimHandler pAnimHandler;
     AirKickBack airKickBack;
@@ -49,6 +50,7 @@ public class PlayerWeaponSystem : MonoBehaviour {
         player = GetComponent<Player>();
         pAnimHandler = GetComponent<PlayerAnimHandler>();
         airKickBack = GetComponent<AirKickBack>();
+        controller = GetComponent<Controller2D>();
 
         muzzlePoint = transform.GetChild(0).transform;
         muzzlePointSplit = transform.GetChild(1).transform;
@@ -96,7 +98,7 @@ public class PlayerWeaponSystem : MonoBehaviour {
             }
         }
 
-        if (player.hasHorInput && hasBackwardsWalked && player.state != Player.pState.BackwardsWalk)
+        if (player.hasHorInput && hasBackwardsWalked && controller.state != Controller2D.pState.BackwardsWalk)
         {
             hasBackwardsWalked = false;
         }
@@ -125,7 +127,13 @@ public class PlayerWeaponSystem : MonoBehaviour {
             //If weapon state is idle, then fire and switch to state.HalfAim
             if (wState == WeaponState.NoAim)
             {
-                wState = WeaponState.HalfAim;
+                if (controller.state != Controller2D.pState.Sliding)
+                {
+                    wState = WeaponState.HalfAim;
+                }
+                else
+                    wState = WeaponState.FullAim;
+                
                 RightShoot(false, false);
             }
             //Else if state equals half aim already then shoot with the other weapon
@@ -192,7 +200,7 @@ public class PlayerWeaponSystem : MonoBehaviour {
                 {
                     wState = WeaponState.FullAim;
                     pAnimHandler.Flip(false);
-                    player.state = Player.pState.BackwardsWalk;
+                    controller.state = Controller2D.pState.BackwardsWalk;
                     player.dir = Player.Direction.Right;
                     hasBackwardsWalked = true;
 
@@ -224,7 +232,7 @@ public class PlayerWeaponSystem : MonoBehaviour {
             {
                 wState = WeaponState.FullAim;
                 pAnimHandler.Flip(false);
-                player.state = Player.pState.BackwardsWalk;
+                controller.state = Controller2D.pState.BackwardsWalk;
                 player.dir = Player.Direction.Right;
                 hasBackwardsWalked = true;
 
@@ -285,7 +293,13 @@ public class PlayerWeaponSystem : MonoBehaviour {
             //If weapon state is idle, then fire and switch to state.HalfAim
             if (wState == WeaponState.NoAim)
             {
-                wState = WeaponState.HalfAim;
+                if (controller.state != Controller2D.pState.Sliding)
+                {
+                    wState = WeaponState.HalfAim;
+                }
+                else
+                    wState = WeaponState.FullAim;
+
                 RightShoot(false, false);
             }
             //Else if state equals half aim already then shoot with the other weapon
@@ -350,7 +364,7 @@ public class PlayerWeaponSystem : MonoBehaviour {
                 {
                     wState = WeaponState.FullAim;
                     pAnimHandler.Flip(false);
-                    player.state = Player.pState.BackwardsWalk;
+                    controller.state = Controller2D.pState.BackwardsWalk;
                     player.dir = Player.Direction.Left;
                     hasBackwardsWalked = true;
 
@@ -382,7 +396,7 @@ public class PlayerWeaponSystem : MonoBehaviour {
             {
                 wState = WeaponState.FullAim;
                 pAnimHandler.Flip(false);
-                player.state = Player.pState.BackwardsWalk;
+                controller.state = Controller2D.pState.BackwardsWalk;
                 player.dir = Player.Direction.Left;
                 hasBackwardsWalked = true;
 

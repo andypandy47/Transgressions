@@ -292,7 +292,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeedIncreaseAmount: 0.1
   groundAccelIncreaseAmount: 0.03
-  airAccelIncreaseAmount: 0.01
+  airAccelIncreaseAmount: 0
 --- !u!114 &114195327053496532
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -312,8 +312,16 @@ MonoBehaviour:
   horizontalRaySpacing: 0
   verticalRaySpacing: 0
   collider: {fileID: 0}
+  state: 0
   maxSlopeAngle: 80
-  test: 0
+  slopeSpeed: 1
+  slopeSpeedIncrease: 1
+  slopeSpeedDivisor: 15
+  slopeIdleSlideSpeed: 1
+  slopeDescentVelocity: {x: 0, y: 0}
+  slopeAscentVelocity: {x: 0, y: 0}
+  slopeLaunchAmount: {x: 0, y: 0}
+  moveAmount: {x: 0, y: 0}
   playerInput: {x: 0, y: 0}
 --- !u!114 &114233217227315774
 MonoBehaviour:
@@ -407,7 +415,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dir: 0
-  state: 0
   alive: 0
   maxJumpHeight: 4
   minJumpHeight: 1

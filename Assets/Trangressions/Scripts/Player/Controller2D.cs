@@ -3,21 +3,69 @@ using System.Collections;
 
 public class Controller2D : RaycastController
 {
+    Player player;
+    PlayerWeaponSystem wSystem;
 
-    public float maxSlopeAngle = 80;
-    public float slopeSpeed = 1;
+    public enum pState
+    {
+        Stationary,
+        Running,
+        BackwardsWalk,
+        Jumping,
+        Faling,
+        Sliding
+    }
+    public pState state;
+
+    public float maxSlopeAngle = 80; //TODO: set to zero so player will gradually slide on all slopes
+    public float slopeSpeed = 1; //add on to moveDistance variables in sliding functions allowing for control over speed on the slopes
     public float slopeSpeedIncrease;
+    public float slopeSpeedDivisor;
     public float slopeIdleSlideSpeed = 1;
-    public float test;
+    float slopeDescentXVelocitySmoothing;
+    float slopeDescentYVelocitySmoothing;
+    public Vector2 slopeDescentVelocity;
+    public Vector2 slopeAscentVelocity;
+    public Vector2 slopeLaunchAmount;
+    public Vector2 moveAmount;
 
     public CollisionInfo collisions;
     [HideInInspector]
     public Vector2 playerInput;
 
+    bool canLand;
+    bool grounded;
+    bool canLaunchOffSlope;
+
+    public IEnumerator FSM()
+    {
+        while (player.alive)
+        {
+            switch (state)
+            {
+                case pState.Stationary:
+                    break;
+                case pState.Running:
+                    break;
+                case pState.BackwardsWalk:
+                    break;
+                case pState.Jumping:
+                    break;
+                case pState.Faling:
+                    break;
+            }
+            yield return null;
+        }
+    }
+
     public override void Start()
     {
         base.Start();
         collisions.faceDir = 1;
+        player = GetComponent<Player>();
+        wSystem = GetComponent<PlayerWeaponSystem>();
+        slopeDescentVelocity = Vector2.zero;
+        state = pState.Stationary;
 
     }
 
@@ -29,26 +77,16 @@ public class Controller2D : RaycastController
 
     public void Move(Vector2 moveAmount, Vector2 input, bool standingOnPlatform = false)
     {
+        grounded = collisions.below;
         UpdateRaycastOrigins();
 
-        collisions.Reset();
+        collisions.Reset(input.x);
         collisions.moveAmountOld = moveAmount;
         playerInput = input;
-            
-        slopeSpeed = Mathf.Clamp(slopeSpeed, 1, 10);
 
         if (moveAmount.y < 0)
         {
-            DescendSlope(ref moveAmount);
-        }
-
-        if (collisions.descendingSlope)
-        {
-            print("Descending slope");
-        }
-        if (collisions.slidingDownMaxSlope)
-        {
-            print("Sliding down maxslope");
+            DescendSlope(ref moveAmount, input.x);
         }
 
         if (moveAmount.x != 0)
@@ -56,22 +94,66 @@ public class Controller2D : RaycastController
             collisions.faceDir = (int)Mathf.Sign(moveAmount.x);
         }
 
-        HorizontalCollisions(ref moveAmount);
+        HorizontalCollisions(ref moveAmount, input);
         if (moveAmount.y != 0)
         {
             VerticalCollisions(ref moveAmount);
         }
 
+        HandleSlopeVelocityEffect(ref moveAmount, input);
+
+        HandleStateLogic(input, moveAmount);
+
         transform.Translate(moveAmount);
-        test = moveAmount.x;
+        this.moveAmount = moveAmount;
 
         if (standingOnPlatform)
         {
             collisions.below = true;
         }
+
+        
+
+        if (collisions.climbingSlope)
+        {
+            //print("Climbing Slope");
+        }
     }
 
-    void HorizontalCollisions(ref Vector2 moveAmount)
+    void HandleStateLogic(Vector2 input, Vector2 moveAmount)
+    {
+        if (grounded && Mathf.Abs(input.x) == 0 && moveAmount.x == 0 && !collisions.slidingDownMaxSlope)
+        {
+            state = pState.Stationary;
+        }
+        else if (grounded && moveAmount.x > 0 && player.dir == Player.Direction.Right && input.x > 0 || grounded && moveAmount.x < 0 && player.dir == Player.Direction.Left && input.x < 0)
+        {
+            state = pState.Running;
+        }
+        else if (grounded && moveAmount.x > 0 && player.dir == Player.Direction.Right && input.x < 1 && !collisions.climbingSlope 
+            || grounded && moveAmount.x < 0 && player.dir == Player.Direction.Left && input.x > -1 && !collisions.climbingSlope || collisions.slidingDownMaxSlope)
+        {
+            state = pState.Sliding;
+        }
+        else if (!grounded && moveAmount.y > 0 && !collisions.climbingSlope)
+        {
+            state = pState.Jumping;
+        }
+        else if (moveAmount.y < 0 && !grounded && !collisions.slidingDownMaxSlope && !collisions.climbingSlope)
+        {
+            state = pState.Faling;
+
+            canLand = true;
+        }
+
+        if (canLand && grounded)
+        {
+            wSystem.inAirShooting = false;
+            canLand = false;
+        }
+    }
+
+    void HorizontalCollisions(ref Vector2 moveAmount, Vector2 input)
     {
         float directionX = collisions.faceDir;
         float rayLength = Mathf.Abs(moveAmount.x) + skinWidth;
@@ -94,6 +176,7 @@ public class Controller2D : RaycastController
 
                 if (hit.distance == 0)
                 {
+                    print(hit.collider.name);
                     continue;
                 }
 
@@ -112,8 +195,10 @@ public class Controller2D : RaycastController
                         distanceToSlopeStart = hit.distance - skinWidth;
                         moveAmount.x -= distanceToSlopeStart * directionX;
                     }
-                    ClimbSlope(ref moveAmount, slopeAngle, hit.normal);
+
+                    ClimbSlope(ref moveAmount, slopeAngle, hit.normal, input);
                     moveAmount.x += distanceToSlopeStart * directionX;
+                    //print("Climb slope please");
                 }
 
                 if (!collisions.climbingSlope || slopeAngle > maxSlopeAngle)
@@ -129,6 +214,8 @@ public class Controller2D : RaycastController
                     collisions.right = directionX == 1;
                 }
             }
+            //else if (hit == false)
+               // print("Hit = false");
         }
     }
 
@@ -195,11 +282,12 @@ public class Controller2D : RaycastController
                     collisions.slopeAngle = slopeAngle;
                     collisions.slopeNormal = hit.normal;
                 }
+                
             }
         }
     }
 
-    void ClimbSlope(ref Vector2 moveAmount, float slopeAngle, Vector2 slopeNormal)
+    void ClimbSlope(ref Vector2 moveAmount, float slopeAngle, Vector2 slopeNormal, Vector2 input)
     {
         float moveDistance = Mathf.Abs(moveAmount.x) * slopeSpeed;
         float climbmoveAmountY = Mathf.Sin(slopeAngle * Mathf.Deg2Rad) * moveDistance;
@@ -208,22 +296,29 @@ public class Controller2D : RaycastController
         {
             moveAmount.y = climbmoveAmountY;
             moveAmount.x = Mathf.Cos(slopeAngle * Mathf.Deg2Rad) * moveDistance * Mathf.Sign(moveAmount.x);
+
+            slopeAscentVelocity = new Vector2(moveAmount.x, moveAmount.y);
+            //print("Climbing a slope");
+
             collisions.below = true;
-            collisions.climbingSlope = true;
+            if (input.x != 0)
+                collisions.climbingSlope = true;
             collisions.slopeAngle = slopeAngle;
             collisions.slopeNormal = slopeNormal;
         }
     }
 
-    void DescendSlope(ref Vector2 moveAmount)
+    void DescendSlope(ref Vector2 moveAmount, float xInput)
     {
         RaycastHit2D maxSlopeHitLeft = Physics2D.Raycast(raycastOrigins.bottomLeft, Vector2.down, Mathf.Abs(moveAmount.y) + skinWidth, collisionMask);
         RaycastHit2D maxSlopeHitRight = Physics2D.Raycast(raycastOrigins.bottomRight, Vector2.down, Mathf.Abs(moveAmount.y) + skinWidth, collisionMask);
-        if (maxSlopeHitLeft ^ maxSlopeHitRight)
+        if (maxSlopeHitLeft ^ maxSlopeHitRight && Mathf.Abs(xInput) == 0)
         {
             SlideDownMaxSlope(maxSlopeHitLeft, ref moveAmount);
             SlideDownMaxSlope(maxSlopeHitRight, ref moveAmount);
         }
+        else
+            collisions.slidingDownMaxSlope = false;
 
         if (!collisions.slidingDownMaxSlope)
         {
@@ -234,6 +329,8 @@ public class Controller2D : RaycastController
             if (hit)
             {
                 float slopeAngle = Vector2.Angle(hit.normal, Vector2.up);
+                slopeSpeedIncrease = slopeAngle / slopeSpeedDivisor;
+
                 if (slopeAngle != 0 && slopeAngle <= maxSlopeAngle)
                 {
                     if (Mathf.Sign(hit.normal.x) == directionX)
@@ -246,10 +343,14 @@ public class Controller2D : RaycastController
                             moveAmount.x = Mathf.Cos(slopeAngle * Mathf.Deg2Rad) * moveDistance * Mathf.Sign(moveAmount.x);
                             moveAmount.y -= descendmoveAmountY;
 
+                            slopeDescentVelocity = new Vector3(moveAmount.x, moveAmount.y);
+                           // print(Mathf.Cos(slopeAngle * Mathf.Deg2Rad) * moveDistance * Mathf.Sign(moveAmount.x));
+
                             collisions.slopeAngle = slopeAngle;
                             collisions.descendingSlope = true;
                             collisions.below = true;
                             collisions.slopeNormal = hit.normal;
+                            //print("Descending slope");
                         }
                     }
                 }
@@ -262,9 +363,10 @@ public class Controller2D : RaycastController
         if (hit)
         {
             float slopeAngle = Vector2.Angle(hit.normal, Vector2.up);
+            //slopeIdleSlideSpeed = slopeAngle / 30;
             if (slopeAngle > maxSlopeAngle)
             {
-                moveAmount.x = (Mathf.Sign(hit.normal.x) * (Mathf.Abs(moveAmount.y) - hit.distance) / Mathf.Tan(slopeAngle * Mathf.Deg2Rad)) * slopeIdleSlideSpeed;
+                moveAmount.x = Mathf.Sign(hit.normal.x) * (Mathf.Abs(moveAmount.y) - hit.distance) / Mathf.Tan(slopeAngle * Mathf.Deg2Rad);
 
                 collisions.slopeAngle = slopeAngle;
                 collisions.slidingDownMaxSlope = true;
@@ -272,6 +374,71 @@ public class Controller2D : RaycastController
             }
         }
 
+    }
+
+    void HandleSlopeVelocityEffect(ref Vector2 moveAmount, Vector2 input)
+    {
+        int dirX = collisions.faceDir;
+
+        if (input.x == 0)
+        {
+            slopeSpeedIncrease = 0;
+            slopeSpeed -= 3 * Time.deltaTime;
+
+            if (collisions.descendingSlope)
+            {
+                //moveAmount.x += slopeDescentVelocity.x;
+                //moveAmount.y += slopeDescentVelocity.y;
+            }
+            else
+            {
+                //slopeDescentVelocity.y = 0;
+               // moveAmount.x += slopeDescentVelocity.x;
+            }
+
+            
+
+            slopeDescentVelocity.y = Mathf.SmoothDamp(slopeDescentVelocity.y, 0f, ref slopeDescentYVelocitySmoothing, 0.8f);
+            if (Mathf.Abs(slopeDescentVelocity.y) < 0.02f)
+                slopeDescentVelocity.y = 0;
+        }
+        
+
+        
+
+        
+
+        if (!collisions.descendingSlope)
+        {
+            slopeDescentVelocity.x = Mathf.SmoothDamp(slopeDescentVelocity.x, 0f, ref slopeDescentXVelocitySmoothing, 0.8f);
+            if (Mathf.Abs(slopeDescentVelocity.x) < 0.02f)
+                slopeDescentVelocity.x = 0;
+
+            moveAmount.x += slopeDescentVelocity.x;
+            //print("Seomthing");
+        }
+        else if (collisions.climbingSlope && Mathf.Abs(slopeDescentVelocity.x) > 0.2)
+        {
+            //canLaunchOffSlope = true;
+            //print("Climbing slope");
+        }
+
+
+        if (!collisions.climbingSlope && canLaunchOffSlope)
+        {
+            if (!collisions.descendingSlope)
+            {
+                //moveAmount.y += (Mathf.Abs(slopeAscentVelocity.y) * 40) * Time.deltaTime;
+                if (grounded || collisions.left || collisions.right)
+                {
+                    //canLaunchOffSlope = false;
+                }
+                print("launchBaby");
+            }
+        }
+        //print(canLaunchOffSlope + " " + collisions.climbingSlope);
+        slopeSpeed = Mathf.Clamp(slopeSpeed, 1, 10);
+        
     }
 
     void ResetFallingThroughPlatform()
@@ -294,18 +461,27 @@ public class Controller2D : RaycastController
         public int faceDir;
         public bool fallingThroughPlatform;
 
-        public void Reset()
+        public void Reset(float xInput)
         {
             above = below = false;
             left = right = false;
             climbingSlope = false;
             descendingSlope = false;
-            slidingDownMaxSlope = false;
+            //slidingDownMaxSlope = false;
             slopeNormal = Vector2.zero;
 
             slopeAngleOld = slopeAngle;
             slopeAngle = 0;
         }
+    }
+
+    public void ResetVariables()
+    {
+        slopeSpeed = 1;
+        slopeSpeedIncrease = 0;
+        slopeDescentVelocity = Vector2.zero;
+        slopeAscentVelocity = Vector2.zero;
+        canLaunchOffSlope = false;
     }
 
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerMovementIncrease : MonoBehaviour {
 
+    Controller2D controller;
     Player player;
 
     public float moveSpeedIncreaseAmount = 1f;
@@ -13,18 +14,26 @@ public class PlayerMovementIncrease : MonoBehaviour {
     private void Start()
     {
         player = GetComponent<Player>();
+        controller = GetComponent<Controller2D>();
     }
 
     public void MoveIncrease(ref float groundAccel, ref float airAccel, ref float moveSpeed, float dirInputX)
     {
         
-        if (player.state != Player.pState.BackwardsWalk)
+        if (controller.state != Controller2D.pState.BackwardsWalk)
         {
             if (Mathf.Abs(dirInputX) > 0)
             {
-                moveSpeed += moveSpeedIncreaseAmount * Time.deltaTime;
-                groundAccel += groundAccelIncreaseAmount * Time.deltaTime;
-                airAccel += airAccelIncreaseAmount * Time.deltaTime;
+                if (controller.collisions.descendingSlope)
+                {
+                    groundAccel += groundAccelIncreaseAmount * 100 * Time.deltaTime;
+                }
+                else
+                {
+                    moveSpeed += moveSpeedIncreaseAmount * Time.deltaTime;
+                    groundAccel += groundAccelIncreaseAmount * Time.deltaTime;
+                    airAccel += airAccelIncreaseAmount * Time.deltaTime;
+                }
             }
             else
             {

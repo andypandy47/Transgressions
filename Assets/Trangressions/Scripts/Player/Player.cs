@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
         Split
     }
 
-    public enum pState
+   /* public enum pState
     {
         Stationary,
         Running,
@@ -23,9 +23,9 @@ public class Player : MonoBehaviour
         Jumping,
         Faling,
         Sliding
-    }
+    }*/
     public Direction dir;
-    public pState state;
+    //public pState state;
 
     [HideInInspector] public bool alive;
 
@@ -79,7 +79,7 @@ public class Player : MonoBehaviour
         maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
         minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
         dir = Direction.Right;
-        state = pState.Stationary;
+       // state = pState.Stationary;
 
         alive = true;
     }
@@ -98,7 +98,7 @@ public class Player : MonoBehaviour
                     break;
             }
 
-            switch (state)
+          /*  switch (state)
             {
                 case pState.Stationary:
                     break;
@@ -110,7 +110,7 @@ public class Player : MonoBehaviour
                     break;
                 case pState.Faling:
                     break;
-            }
+            }*/
             yield return null;
         }
     }
@@ -130,7 +130,7 @@ public class Player : MonoBehaviour
         //HandleMoveSpeed();
         HandleWallSliding();
         SetBools();
-        HandleStateLogic();
+        HandleDirectionLogic();
 
         controller.Move(velocity * Time.deltaTime, directionalInput);
 
@@ -153,7 +153,7 @@ public class Player : MonoBehaviour
 
     }
 
-    void HandleStateLogic()
+    void HandleDirectionLogic()
     {
         #region Direction Logic
 
@@ -181,7 +181,7 @@ public class Player : MonoBehaviour
 
         #endregion
 
-        if (grounded && !hasHorInput && velocity.x == 0)
+      /*  if (grounded && !hasHorInput && velocity.x == 0 && !controller.collisions.slidingDownMaxSlope)
         {
             state = pState.Stationary;
         }
@@ -189,13 +189,15 @@ public class Player : MonoBehaviour
         {
             state = pState.Running;
         }
-        else if (grounded && velocity.x > 0 && dir == Direction.Right && directionalInput.x < 1 || grounded && velocity.x < 0 && dir == Direction.Left && directionalInput.x > -1 )
+        else if (grounded && velocity.x > 0 && dir == Direction.Right && directionalInput.x < 1 || grounded && velocity.x < 0 && dir == Direction.Left && directionalInput.x > -1 || controller.collisions.slidingDownMaxSlope )
         {
             state = pState.Sliding;
+            print("Sliding");
         }
         else if (!grounded && velocity.y > 0)
         {
             state = pState.Jumping;
+            print("jumping");
         }
         else if (velocity.y < 0 && !grounded && !controller.collisions.slidingDownMaxSlope)
         {
@@ -204,7 +206,7 @@ public class Player : MonoBehaviour
             canLand = true;
         }
 
-        /*if (state == pState.Faling || state == pState.Sliding)
+        if (state == pState.Faling || state == pState.Sliding)
         {
             rArm.transform.localPosition = altRightArmPos;
             lArm.transform.localPosition = altLeftArmPos;
@@ -230,14 +232,7 @@ public class Player : MonoBehaviour
 
     void HandleMoveSpeed()
     {
-        if (state == pState.BackwardsWalk)
-        {
-            moveSpeed = backwardsWalkMoveSpeed;
-        }
-        else
-        {
-            moveSpeed = normalMoveSpeed;
-        }
+     
     }
 
     public void SetDirectionalInput(Vector2 input)
@@ -299,7 +294,7 @@ public class Player : MonoBehaviour
             else
             {
                 velocity.y = maxJumpVelocity;
-                state = pState.Jumping;
+                controller.state = Controller2D.pState.Jumping;
             }
         }
     }
@@ -376,6 +371,7 @@ public class Player : MonoBehaviour
         wSystem.rShooting = false;
         wSystem.wState = PlayerWeaponSystem.WeaponState.NoAim;
         pAnimHandler.ResetAllAnimParams();
+        controller.ResetVariables();
 
         reset = true;
 
@@ -390,7 +386,7 @@ public class Player : MonoBehaviour
         {
             dir = Direction.Right;
         }
-        state = pState.Stationary;
+        controller.state = Controller2D.pState.Stationary;
     }
 
 }
