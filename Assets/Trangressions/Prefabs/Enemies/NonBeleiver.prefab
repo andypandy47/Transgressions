@@ -142,6 +142,8 @@ MonoBehaviour:
   bloodPos: {fileID: 0}
   dead: 0
   isTarget: 0
+  targetPointer: {fileID: 1295449014355318, guid: ab330fe8d9c93b3489c89aeed03ce484,
+    type: 2}
 --- !u!212 &212203615198492920
 SpriteRenderer:
   m_ObjectHideFlags: 1

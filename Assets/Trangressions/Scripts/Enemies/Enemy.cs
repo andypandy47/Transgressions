@@ -19,6 +19,7 @@ public class Enemy : MonoBehaviour {
 
     public bool dead;
     public bool isTarget;
+    public GameObject targetPointer;
 
     private void Awake()
     {
@@ -32,6 +33,12 @@ public class Enemy : MonoBehaviour {
         bloodPos = transform.GetChild(0).transform;
 
         health = startingHealth;
+
+        if (isTarget)
+        {
+            GameObject pointerObj = Instantiate(targetPointer, transform);
+            pointerObj.transform.localPosition = new Vector3(0.06f, 0.359f, 0);
+        }
     }
 
     public void DamageEnemy(float damage, Player player)
@@ -48,6 +55,10 @@ public class Enemy : MonoBehaviour {
     {
         dead = true;
         collider.enabled = false;
+
+        if (isTarget)
+            Destroy(transform.GetChild(1).gameObject);
+
         ScoreCalculator.sCalc.AddEnemyToScore(eType);
         lTime.IncreaseTime(1);
         BloodEffectsController.bFXController.SpawnBloodEffect(this, player);
@@ -62,6 +73,12 @@ public class Enemy : MonoBehaviour {
         if (collider.enabled == false)
         {
             collider.enabled = true;
+        }
+
+        if (isTarget)
+        {
+            GameObject pointerObj = Instantiate(targetPointer, transform);
+            pointerObj.transform.localPosition = new Vector3(0.06f, 0.359f, 0);
         }
     }
 }

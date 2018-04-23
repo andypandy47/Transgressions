@@ -137,6 +137,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bloodEffects:
   - {fileID: 1064879316367512, guid: ec2319822ecc0f74281e056baaeb7437, type: 2}
+  bloodPSystem: {fileID: 0}
   activeBloodSprites: []
 --- !u!114 &114683877013649472
 MonoBehaviour:

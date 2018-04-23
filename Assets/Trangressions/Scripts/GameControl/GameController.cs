@@ -6,6 +6,18 @@ public class GameController : MonoBehaviour {
 
     public static GameController gc;
 
+    public enum GameState
+    {
+        MainMenu,
+        Options,
+        PauseMenu,
+        WinMenu,
+        LoseMenu,
+        TutorialScreen,
+        TutorialSection,
+        Section1
+    }
+
     Player player;
     public LevelTimer lTime;
     public WinConditions wc;

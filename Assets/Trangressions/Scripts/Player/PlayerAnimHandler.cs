@@ -39,6 +39,8 @@ public class PlayerAnimHandler : MonoBehaviour {
             anim.SetBool("SplitAim", wSystem.wState == PlayerWeaponSystem.WeaponState.SplitAim ? true : false);
             anim.SetBool("Shooting", wSystem.lShooting || wSystem.rShooting ? true : false);
             anim.SetBool("WalkBackwards", player.state == Player.pState.BackwardsWalk ? true : false);
+            anim.SetBool("Sliding", player.state == Player.pState.Sliding ? true : false);
+            anim.SetBool("SlideDownSlope", controller.collisions.slidingDownMaxSlope);
         }        
 
         anim.SetBool("Reset", player.reset);

@@ -21,7 +21,8 @@ public class Player : MonoBehaviour
         Running,
         BackwardsWalk,
         Jumping,
-        Faling
+        Faling,
+        Sliding
     }
     public Direction dir;
     public pState state;
@@ -58,6 +59,10 @@ public class Player : MonoBehaviour
     bool canLand;
     int wallDirX;
 
+    GameObject rArm, lArm;
+    Vector3 normalRightArmPos = new Vector3(0.311f, -0.277f, 0), normalLeftArmPos = new Vector3(0.186f, -0.261f, 0);
+    Vector3 altRightArmPos = new Vector3(0.22f, -0.214f, 0), altLeftArmPos = new Vector3(0.15f, -0.352f, 0);
+
     public float test;
 
     void Start()
@@ -66,6 +71,9 @@ public class Player : MonoBehaviour
         wSystem = GetComponent<PlayerWeaponSystem>();
         pAnimHandler = GetComponent<PlayerAnimHandler>();
         moveIncrease = GetComponent<PlayerMovementIncrease>();
+
+        rArm = transform.GetChild(2).gameObject;
+        lArm = transform.GetChild(3).gameObject;
 
         gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);
         maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
@@ -173,25 +181,39 @@ public class Player : MonoBehaviour
 
         #endregion
 
-        if (grounded && !hasHorInput)
+        if (grounded && !hasHorInput && velocity.x == 0)
         {
             state = pState.Stationary;
         }
-        else if (grounded && velocity.x > 0 && dir == Direction.Right || grounded && velocity.x < 0 && dir == Direction.Left)
+        else if (grounded && velocity.x > 0 && dir == Direction.Right && directionalInput.x > 0 || grounded && velocity.x < 0 && dir == Direction.Left && directionalInput.x < 0)
         {
             state = pState.Running;
+        }
+        else if (grounded && velocity.x > 0 && dir == Direction.Right && directionalInput.x < 1 || grounded && velocity.x < 0 && dir == Direction.Left && directionalInput.x > -1 )
+        {
+            state = pState.Sliding;
         }
         else if (!grounded && velocity.y > 0)
         {
             state = pState.Jumping;
         }
-        else if (velocity.y < 0 && !grounded)
+        else if (velocity.y < 0 && !grounded && !controller.collisions.slidingDownMaxSlope)
         {
             state = pState.Faling;
-           // pAnimHandler.lArmAnim.ResetAllAnimParams();
-            //pAnimHandler.rArmAnim.ResetAllAnimParams();
+            
             canLand = true;
         }
+
+        /*if (state == pState.Faling || state == pState.Sliding)
+        {
+            rArm.transform.localPosition = altRightArmPos;
+            lArm.transform.localPosition = altLeftArmPos;
+        }
+        else
+        {
+            rArm.transform.localPosition = normalRightArmPos;
+            lArm.transform.localPosition = normalRightArmPos;
+        }*/
 
 
 
@@ -324,6 +346,11 @@ public class Player : MonoBehaviour
             }
 
         }
+
+    }
+
+    void PlayerSliding()
+    {
 
     }
 
