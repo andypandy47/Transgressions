@@ -8,21 +8,25 @@ public class MainMenu : MonoBehaviour {
     public enum CurrentScreen
     {
         MainMenu,
+        MissionSelect,
         Help,
         Options
     }
     public CurrentScreen screen;
     GameObject instructionScreen;
+    GameObject missionSelectScreen;
 
     private void Start()
     {
         instructionScreen = transform.GetChild(1).gameObject;
+        missionSelectScreen = transform.GetChild(2).gameObject;
         screen = CurrentScreen.MainMenu;
     }
 
-    public void TutorialStart()
+    public void MissionSelect()
     {
-        SceneManager.LoadSceneAsync(1, LoadSceneMode.Single);
+        missionSelectScreen.SetActive(true);
+        screen = CurrentScreen.MissionSelect;
     }
 
     public void Help()
@@ -38,7 +42,12 @@ public class MainMenu : MonoBehaviour {
             instructionScreen.SetActive(false);
             screen = CurrentScreen.MainMenu;
         }
-            
+        else if (screen == CurrentScreen.MissionSelect)
+        {
+            missionSelectScreen.SetActive(false);
+            screen = CurrentScreen.MainMenu;
+        }
+
     }
 	
 }

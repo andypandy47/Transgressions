@@ -53,20 +53,19 @@ public class Enemy : MonoBehaviour {
 
     public void KillEnemy(Player player)
     {
-        dead = true;
-        collider.enabled = false;
-
         if (isTarget)
             Destroy(transform.GetChild(1).gameObject);
 
         ScoreCalculator.sCalc.AddEnemyToScore(eType);
         lTime.IncreaseTime(1);
         BloodEffectsController.bFXController.SpawnBloodEffect(this, player);
+
+        dead = true;
+        collider.enabled = false;
     }
 
     public void ResetEnemy()
     {
-        dead = false;
         health = startingHealth;
 
         bloodPos.localPosition = new Vector3(0.75f, 0.34f, 0); 
@@ -75,10 +74,12 @@ public class Enemy : MonoBehaviour {
             collider.enabled = true;
         }
 
-        if (isTarget)
+        if (isTarget && dead)
         {
+            print("Reset target enemy");
             GameObject pointerObj = Instantiate(targetPointer, transform);
             pointerObj.transform.localPosition = new Vector3(0.06f, 0.359f, 0);
         }
+        dead = false;
     }
 }

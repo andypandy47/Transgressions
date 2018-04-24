@@ -87,7 +87,7 @@ public class PlayerWeaponSystem : MonoBehaviour {
             altShoot.Clear();
         }
 
-        if (wState == WeaponState.SplitAim && player.hasHorInput)
+        if (wState == WeaponState.SplitAim && player.hasHorInput || wState == WeaponState.HalfAim && player.hasHorInput)
         {
             wState = WeaponState.FullAim;
 
@@ -597,7 +597,7 @@ public class PlayerWeaponSystem : MonoBehaviour {
         }
 
         //Camshake
-        CamShake.camShake.StartCoroutine(CamShake.camShake.VirutalCameraShake(3, .1f));
+        CamShake.camShake.StartCoroutine(CamShake.camShake.VirutalCameraShake(5, .1f));
 
         if (!player.grounded)
             airKickBack.KickBack();
