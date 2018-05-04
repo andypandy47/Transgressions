@@ -10,6 +10,7 @@ public class PlayerMovementIncrease : MonoBehaviour {
     public float moveSpeedIncreaseAmount = 1f;
     public float groundAccelIncreaseAmount = 0.03f;
     public float airAccelIncreaseAmount = 0.01f;
+    public float jumpIncreaseAmount = 0.3f;
 
     private void Start()
     {
@@ -17,7 +18,7 @@ public class PlayerMovementIncrease : MonoBehaviour {
         controller = GetComponent<Controller2D>();
     }
 
-    public void MoveIncrease(ref float groundAccel, ref float airAccel, ref float moveSpeed, float dirInputX)
+    public void MoveIncrease(ref float groundAccel, ref float airAccel, ref float moveSpeed, ref float maxJumpHeight, ref float timeToJumpApex, float dirInputX)
     {
         
         if (controller.state != Controller2D.pState.BackwardsWalk)
@@ -33,6 +34,7 @@ public class PlayerMovementIncrease : MonoBehaviour {
                     moveSpeed += moveSpeedIncreaseAmount * Time.deltaTime;
                     groundAccel += groundAccelIncreaseAmount * Time.deltaTime;
                     airAccel += airAccelIncreaseAmount * Time.deltaTime;
+                    maxJumpHeight += jumpIncreaseAmount * Time.deltaTime;
                 }
             }
             else
@@ -40,6 +42,7 @@ public class PlayerMovementIncrease : MonoBehaviour {
                 moveSpeed -= (moveSpeedIncreaseAmount * 4) * Time.deltaTime;
                 groundAccel -= (groundAccelIncreaseAmount * 4) * Time.deltaTime;
                 airAccel -= (airAccelIncreaseAmount* 4) * Time.deltaTime;
+                maxJumpHeight -= (jumpIncreaseAmount * 4) * Time.deltaTime;
             }
         }
         else
@@ -48,8 +51,10 @@ public class PlayerMovementIncrease : MonoBehaviour {
         }
 
         groundAccel = Mathf.Clamp(groundAccel, 0.1f, 0.5f);
-        moveSpeed = Mathf.Clamp(moveSpeed, 6, 9);
+        moveSpeed = Mathf.Clamp(moveSpeed, 6, 11);
         airAccel = Mathf.Clamp(airAccel, 0.2f, 0.5f);
+        maxJumpHeight = Mathf.Clamp(maxJumpHeight, 4, 9);
+        timeToJumpApex = maxJumpHeight * 0.125f;
     }
 
 

@@ -7,14 +7,23 @@ public class PauseMenu : MonoBehaviour {
     public static bool isPaused = false;
     GameObject pauseMenuUI;
 
-    private void Start()
+    private void Awake()
     {
         pauseMenuUI = transform.GetChild(0).gameObject;
+        print("pStart");
+        if (isPaused)
+            Resume();
+    }
+
+    private void Start()
+    {
+        
     }
 
     public void Resume()
     {
-        pauseMenuUI.SetActive(false);
+        if (pauseMenuUI.activeInHierarchy)
+            pauseMenuUI.SetActive(false);
         isPaused = false;
         Time.timeScale = 1;
         print("Resume");

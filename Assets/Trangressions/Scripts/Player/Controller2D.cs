@@ -5,6 +5,7 @@ public class Controller2D : RaycastController
 {
     Player player;
     PlayerWeaponSystem wSystem;
+    PlayerAnimHandler pAnimHandler;
 
     public enum pState
     {
@@ -64,6 +65,7 @@ public class Controller2D : RaycastController
         collisions.faceDir = 1;
         player = GetComponent<Player>();
         wSystem = GetComponent<PlayerWeaponSystem>();
+        pAnimHandler = GetComponent<PlayerAnimHandler>();
         slopeDescentVelocity = Vector2.zero;
         state = pState.Stationary;
 
@@ -79,6 +81,7 @@ public class Controller2D : RaycastController
     {
         grounded = collisions.below;
         UpdateRaycastOrigins();
+        HandleSlopeVelocityEffect(ref moveAmount, input);
 
         collisions.Reset(input.x);
         collisions.moveAmountOld = moveAmount;
@@ -99,9 +102,6 @@ public class Controller2D : RaycastController
         {
             VerticalCollisions(ref moveAmount);
         }
-
-        HandleSlopeVelocityEffect(ref moveAmount, input);
-
         HandleStateLogic(input, moveAmount);
 
         transform.Translate(moveAmount);
@@ -116,7 +116,7 @@ public class Controller2D : RaycastController
 
         if (collisions.climbingSlope)
         {
-            //print("Climbing Slope");
+            print("Climbing Slope");
         }
     }
 
@@ -139,7 +139,7 @@ public class Controller2D : RaycastController
         {
             state = pState.Jumping;
         }
-        else if (moveAmount.y < 0 && !grounded && !collisions.slidingDownMaxSlope && !collisions.climbingSlope)
+        else if (moveAmount.y < 0 && !grounded && !collisions.slidingDownMaxSlope && !collisions.climbingSlope && !collisions.descendingSlope)
         {
             state = pState.Faling;
 
@@ -148,8 +148,10 @@ public class Controller2D : RaycastController
 
         if (canLand && grounded)
         {
+            StartCoroutine(pAnimHandler.DustLandFX());
             wSystem.inAirShooting = false;
             canLand = false;
+            
         }
     }
 
@@ -337,7 +339,7 @@ public class Controller2D : RaycastController
                     {
                         if (hit.distance - skinWidth <= Mathf.Tan(slopeAngle * Mathf.Deg2Rad) * Mathf.Abs(moveAmount.x))
                         {
-                            slopeSpeed += slopeSpeedIncrease * Time.deltaTime;
+                            //slopeSpeed += slopeSpeedIncrease * Time.deltaTime;
                             float moveDistance = Mathf.Abs(moveAmount.x) * slopeSpeed;
                             float descendmoveAmountY = Mathf.Sin(slopeAngle * Mathf.Deg2Rad) * moveDistance;
                             moveAmount.x = Mathf.Cos(slopeAngle * Mathf.Deg2Rad) * moveDistance * Mathf.Sign(moveAmount.x);
@@ -350,7 +352,6 @@ public class Controller2D : RaycastController
                             collisions.descendingSlope = true;
                             collisions.below = true;
                             collisions.slopeNormal = hit.normal;
-                            //print("Descending slope");
                         }
                     }
                 }
@@ -380,63 +381,6 @@ public class Controller2D : RaycastController
     {
         int dirX = collisions.faceDir;
 
-        if (input.x == 0)
-        {
-            slopeSpeedIncrease = 0;
-            slopeSpeed -= 3 * Time.deltaTime;
-
-            if (collisions.descendingSlope)
-            {
-                //moveAmount.x += slopeDescentVelocity.x;
-                //moveAmount.y += slopeDescentVelocity.y;
-            }
-            else
-            {
-                //slopeDescentVelocity.y = 0;
-               // moveAmount.x += slopeDescentVelocity.x;
-            }
-
-            
-
-            slopeDescentVelocity.y = Mathf.SmoothDamp(slopeDescentVelocity.y, 0f, ref slopeDescentYVelocitySmoothing, 0.8f);
-            if (Mathf.Abs(slopeDescentVelocity.y) < 0.02f)
-                slopeDescentVelocity.y = 0;
-        }
-        
-
-        
-
-        
-
-        if (!collisions.descendingSlope)
-        {
-            slopeDescentVelocity.x = Mathf.SmoothDamp(slopeDescentVelocity.x, 0f, ref slopeDescentXVelocitySmoothing, 0.8f);
-            if (Mathf.Abs(slopeDescentVelocity.x) < 0.02f)
-                slopeDescentVelocity.x = 0;
-
-            moveAmount.x += slopeDescentVelocity.x;
-            //print("Seomthing");
-        }
-        else if (collisions.climbingSlope && Mathf.Abs(slopeDescentVelocity.x) > 0.2)
-        {
-            //canLaunchOffSlope = true;
-            //print("Climbing slope");
-        }
-
-
-        if (!collisions.climbingSlope && canLaunchOffSlope)
-        {
-            if (!collisions.descendingSlope)
-            {
-                //moveAmount.y += (Mathf.Abs(slopeAscentVelocity.y) * 40) * Time.deltaTime;
-                if (grounded || collisions.left || collisions.right)
-                {
-                    //canLaunchOffSlope = false;
-                }
-                print("launchBaby");
-            }
-        }
-        //print(canLaunchOffSlope + " " + collisions.climbingSlope);
         slopeSpeed = Mathf.Clamp(slopeSpeed, 1, 10);
         
     }

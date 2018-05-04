@@ -5,6 +5,7 @@ using UnityEngine;
 public class WinConditions : MonoBehaviour {
 
     LevelTimer lTime;
+    LevelManager lManager;
 
     public bool targetKilled;
     public bool reachedExit;
@@ -23,17 +24,18 @@ public class WinConditions : MonoBehaviour {
             exitPoint = GameObject.FindGameObjectWithTag("ExitPoint");
         if (exitPoint.activeInHierarchy)
             exitPoint.SetActive(false);
+        RestartWinConditions();
     }
 
     private void Start()
     {   
-        RestartWinConditions();
+        
     }
 
     public void RestartWinConditions()
     {
         lTime = GetComponent<LevelTimer>();
-
+        lManager = GetComponent<LevelManager>();
         enemyGameObjects = GameObject.FindGameObjectsWithTag("Enemy");
 
         allEnemies = new Enemy[enemyGameObjects.Length];
@@ -63,6 +65,7 @@ public class WinConditions : MonoBehaviour {
         {
             if (!targetKilled)
             {
+                print("Target not killed");
                 for (int i = 0; i < allEnemies.Length; i++)
                 {
                     if (allEnemies[i].isTarget && allEnemies[i].dead)
@@ -82,7 +85,7 @@ public class WinConditions : MonoBehaviour {
             if (targetKilled && reachedExit && inTime)
             {
                 allWinConditionsMet = true;
-                GameController.gc.PlayerWin();
+                lManager.PlayerWin();
             }
         }
     }

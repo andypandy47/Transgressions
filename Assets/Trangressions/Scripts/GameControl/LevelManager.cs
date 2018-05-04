@@ -1,56 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class GameController : MonoBehaviour {
-
-    public static GameController gc;
-
-    public enum GameState
-    {
-        MainMenu,
-        Options,
-        PauseMenu,
-        WinMenu,
-        LoseMenu,
-        TutorialScreen,
-        TutorialSection,
-        Section1
-    }
+public class LevelManager : MonoBehaviour {
 
     Player player;
-    public LevelTimer lTime;
-    public WinConditions wc;
+    LevelTimer lTime;
+    WinConditions wc;
     BloodEffectsController bEffects;
     InGameUIMenu UIMenus;
     PlatformManager pManager;
     ScoreCalculator sCalc;
+    PauseMenu pMenu;
+
     GameObject playerObj;
     GameObject UICanvas;
-    GameObject lManager;
     Transform spawnPoint;
 
-    public PauseMenu pMenu;
-    string currentScene;
-
     private void Awake()
-    {
-        if (!gc)
-        {
-            gc = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-            Destroy(gameObject);
-    }
-
-    private void Start()
-    {
-
-    }
-
-  /*  public void StartController()
     {
         playerObj = GameObject.FindGameObjectWithTag("Player");
         UICanvas = GameObject.FindGameObjectWithTag("UICanvas");
@@ -59,13 +26,11 @@ public class GameController : MonoBehaviour {
         player = playerObj.GetComponent<Player>();
         pMenu = UICanvas.GetComponent<PauseMenu>();
         UIMenus = UICanvas.GetComponent<InGameUIMenu>();
-        lTime = lManager.GetComponent<LevelTimer>();
-        wc = lManager.GetComponent<WinConditions>();
-        bEffects = lManager.GetComponent<BloodEffectsController>();
-        pManager = lManager.GetComponent<PlatformManager>();
-        sCalc = lManager.GetComponent<ScoreCalculator>();
-
-        print("Reset controller");
+        lTime = GetComponent<LevelTimer>();
+        wc = GetComponent<WinConditions>();
+        bEffects = GetComponent<BloodEffectsController>();
+        pManager = GetComponent<PlatformManager>();
+        sCalc = GetComponent<ScoreCalculator>();
     }
 
     private void Update()
@@ -90,18 +55,6 @@ public class GameController : MonoBehaviour {
         UIMenus.WinMenu(sCalc.levelCompleteScore, sCalc.CalculateTimeScore(), sCalc.killScore, sCalc.CalculateRank());
     }
 
-    public void RestartCurrenLevel()
-    {
-        lTime.RestartTimer();
-        wc.ResetConditions();
-        bEffects.ResetSprites();
-        player.ResetToSpawnPosition(spawnPoint);
-
-        pMenu.Resume();
-        player.reset = false;
-
-    }
-
     public IEnumerator RestartLevel()
     {
         print("Restart level");
@@ -112,17 +65,24 @@ public class GameController : MonoBehaviour {
         player.ResetToSpawnPosition(spawnPoint);
         pManager.ResetAllPlatforms();
         sCalc.ResetScore();
-        ObjectPooler.sharedInstance.ResetSplatters();
+        ObjectPooler.sharedInstance.DeactivatePooledObjects();
 
         pMenu.Resume();
         yield return new WaitForSeconds(0.1f);
         player.reset = false;
-        
+
         yield return false;
     }
 
-    private void OnLevelWasLoaded(int level)
+    public IEnumerator NextLevel()
     {
-        
-    }*/
+        print("Next Level");
+        wc.ResetConditions();
+        bEffects.ResetSprites();
+        ObjectPooler.sharedInstance.DeactivatePooledObjects();
+
+        yield return false;
+    }
+
+
 }

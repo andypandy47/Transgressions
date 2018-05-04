@@ -29,7 +29,7 @@ public class Enemy : MonoBehaviour {
     private void Start()
     {
         collider = GetComponent<BoxCollider2D>();
-        lTime = GameController.gc.gameObject.GetComponent<LevelTimer>();
+        lTime = GameObject.FindGameObjectWithTag("LevelManager").GetComponent<LevelTimer>();
         bloodPos = transform.GetChild(0).transform;
 
         health = startingHealth;

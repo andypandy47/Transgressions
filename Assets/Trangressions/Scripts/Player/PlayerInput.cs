@@ -7,12 +7,14 @@ public class PlayerInput : MonoBehaviour
     Player player;
     PlayerWeaponSystem wSystem;
     PauseMenu pMenu;
+    LevelManager lManager;
 
     void Start()
     {
         player = GetComponent<Player>();
         wSystem = GetComponent<PlayerWeaponSystem>();
         pMenu = GameObject.FindGameObjectWithTag("UICanvas").GetComponent<PauseMenu>();
+        lManager = GameObject.FindGameObjectWithTag("LevelManager").GetComponent<LevelManager>();
     }
 
     void Update()
@@ -42,7 +44,7 @@ public class PlayerInput : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.R))
             {
-                GameController.gc.StartCoroutine(GameController.gc.RestartLevel());
+                StartCoroutine(lManager.RestartLevel());
             }
         }
         

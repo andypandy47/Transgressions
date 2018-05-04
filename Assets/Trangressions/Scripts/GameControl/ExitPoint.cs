@@ -8,7 +8,7 @@ public class ExitPoint : MonoBehaviour {
 
     private void Start()
     {
-        wc = GameController.gc.gameObject.GetComponent<WinConditions>();
+        wc = GameObject.FindGameObjectWithTag("LevelManager").GetComponent<WinConditions>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

@@ -41,6 +41,7 @@ public class PlayerAnimHandler : MonoBehaviour {
             anim.SetBool("WalkBackwards", controller.state == Controller2D.pState.BackwardsWalk ? true : false);
             anim.SetBool("Sliding", controller.state == Controller2D.pState.Sliding ? true : false);
             anim.SetBool("SlideDownSlope", controller.collisions.slidingDownMaxSlope);
+            anim.SetBool("Wallslide", player.wallSliding);
         }        
 
         anim.SetBool("Reset", player.reset);
@@ -111,5 +112,32 @@ public class PlayerAnimHandler : MonoBehaviour {
 
         lArmAnim.ResetAllAnimParams();
         rArmAnim.ResetAllAnimParams();
+    }
+
+    public IEnumerator DustLandFX()
+    {
+        GameObject dustFX = ObjectPooler.sharedInstance.GetPooledObject("DustCloud");
+        dustFX.SetActive(true);
+        dustFX.transform.position = new Vector3(transform.position.x, transform.position.y - 0.99f, 0);
+        dustFX.transform.eulerAngles = new Vector3(-90, 0, 0);
+        yield return new WaitForSeconds(2f);
+        dustFX.SetActive(false);
+    }
+
+    public IEnumerator WallDustFX(int wallDirX)
+    {
+        GameObject dustFX = ObjectPooler.sharedInstance.GetPooledObject("DustCloud");
+        dustFX.SetActive(true);
+        dustFX.transform.position = new Vector3(transform.position.x - 0.177f, transform.position.y - 0.618f, 0);
+        if (wallDirX == -1)
+        {
+            dustFX.transform.eulerAngles = new Vector3(-180, -90, 90);
+        }
+        else
+        {
+            dustFX.transform.eulerAngles = new Vector3(180, 90, -90);
+        }
+        yield return new WaitForSeconds(2f);
+        dustFX.SetActive(false);
     }
 }

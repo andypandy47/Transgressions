@@ -11,18 +11,26 @@ public class LevelTimer : MonoBehaviour {
     public float levelTime;
     public bool debugging;
     [HideInInspector] public float currentTime;
+    PauseMenu pMenu;
+
+    private void Awake()
+    {
+        RestartTimer();
+    }
 
     private void Start()
     {
-        RestartTimer();
+        
     }
 
     public void RestartTimer()
     {
         timerBar = GameObject.FindGameObjectWithTag("TimerBar").GetComponent<Image>();
         wc = GetComponent<WinConditions>();
+        pMenu = GameObject.FindGameObjectWithTag("UICanvas").GetComponent<PauseMenu>();
         currentTime = levelTime;
         UpdateTimerBar();
+
         print("Timer reset");
     }
 

@@ -8,6 +8,7 @@ using TMPro;
 public class InGameUIMenu : MonoBehaviour {
 
     PauseMenu pMenu;
+    LevelManager lManager;
     GameObject exitPoint;
 
     GameObject loseMenu;
@@ -22,6 +23,7 @@ public class InGameUIMenu : MonoBehaviour {
     {
         pMenu = GetComponent<PauseMenu>();
         exitPoint = GameObject.FindGameObjectWithTag("ExitPoint");
+        lManager = GameObject.FindGameObjectWithTag("LevelManager").GetComponent<LevelManager>();
 
         loseMenu = transform.GetChild(1).gameObject;
         winMenu = transform.GetChild(2).gameObject;
@@ -34,7 +36,7 @@ public class InGameUIMenu : MonoBehaviour {
 
     public void RestartLevel()
     {
-        GameController.gc.StartCoroutine(GameController.gc.RestartLevel());
+        StartCoroutine(lManager.RestartLevel());
 
         if (loseMenu.activeInHierarchy)
         {
@@ -84,5 +86,11 @@ public class InGameUIMenu : MonoBehaviour {
         timerText.text = "";
         killsText.text = "";
         rankText.text = "";
+    }
+
+    public void NextLevel()
+    {
+        StartCoroutine(lManager.NextLevel());
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1, LoadSceneMode.Single);
     }
 }

@@ -15,6 +15,7 @@ public class ObjectPooler : MonoBehaviour {
 
     public List<ObjectPoolItem> itemsToPool;
     public List<GameObject> pooledObjects;
+
     public GameObject splatter;
     public int amountToSplatterPool;
     public List<GameObject> splatterPool;
@@ -120,11 +121,16 @@ public class ObjectPooler : MonoBehaviour {
         return null;
     }
 
-    public void ResetSplatters()
+    public void DeactivatePooledObjects()
     {
         for (int i = 0; i < splatterPool.Count; i++)
         {
             splatterPool[i].SetActive(false);
+        }
+
+        for (int i = 0; i < pooledObjects.Count; i++)
+        {
+            pooledObjects[i].SetActive(false);
         }
     }
 }

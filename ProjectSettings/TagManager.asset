@@ -17,6 +17,8 @@ TagManager:
   - TimerBar
   - SpawnPoint
   - SpikeTrap
+  - DustCloud
+  - LevelManager
   layers:
   - Default
   - TransparentFX

@@ -56,7 +56,7 @@ public class Player : MonoBehaviour
     public Vector3 velocity;
     [HideInInspector] public Vector2 directionalInput;
     [HideInInspector] public bool wallSliding, running, hasHorInput, grounded, reset;
-    bool canLand;
+    bool canLand, canWallSlide;
     int wallDirX;
 
     GameObject rArm, lArm;
@@ -75,13 +75,11 @@ public class Player : MonoBehaviour
         rArm = transform.GetChild(2).gameObject;
         lArm = transform.GetChild(3).gameObject;
 
-        gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);
-        maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
-        minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
         dir = Direction.Right;
        // state = pState.Stationary;
 
         alive = true;
+        canWallSlide = true;
     }
 
     public IEnumerator FSM()
@@ -117,6 +115,9 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);
+        maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
+        minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
 
         if (Mathf.Abs(directionalInput.x) > 0)
         {
@@ -125,7 +126,7 @@ public class Player : MonoBehaviour
         else
             hasHorInput = false;
 
-        moveIncrease.MoveIncrease(ref accelerationTimeGrounded, ref accelerationTimeAirborne, ref moveSpeed, directionalInput.x);
+        moveIncrease.MoveIncrease(ref accelerationTimeGrounded, ref accelerationTimeAirborne, ref moveSpeed, ref maxJumpHeight, ref timeToJumpApex, directionalInput.x);
         CalculateVelocity();
         //HandleMoveSpeed();
         HandleWallSliding();
@@ -278,8 +279,10 @@ public class Player : MonoBehaviour
             else
             {
                 velocity.x = -wallDirX * wallLeap.x;
-                velocity.y = wallLeap.y;
+                velocity.y = maxJumpVelocity;
+                print("wall leap");
             }
+            StartCoroutine(pAnimHandler.WallDustFX(wallDirX));
         }
         if (controller.collisions.below)
         {
@@ -289,6 +292,7 @@ public class Player : MonoBehaviour
                 { // not jumping against max slope
                     velocity.y = maxJumpVelocity * controller.collisions.slopeNormal.y;
                     velocity.x = maxJumpVelocity * controller.collisions.slopeNormal.x;
+                    controller.state = Controller2D.pState.Jumping;
                 }
             }
             else
@@ -312,9 +316,13 @@ public class Player : MonoBehaviour
     {
         wallDirX = (controller.collisions.left) ? -1 : 1;
         wallSliding = false;
-        if ((controller.collisions.left || controller.collisions.right) && !controller.collisions.below && velocity.y < 0)
+        if ((controller.collisions.left || controller.collisions.right) && !controller.collisions.below && velocity.y <= 6)
         {
             wallSliding = true;
+            if (canWallSlide)
+            {
+                canWallSlide = false;
+            }
 
             if (velocity.y < -wallSlideSpeedMax)
             {
@@ -339,7 +347,10 @@ public class Player : MonoBehaviour
             {
                 timeToWallUnstick = wallStickTime;
             }
-
+        }
+        else
+        {
+            canWallSlide = true;
         }
 
     }
@@ -366,6 +377,9 @@ public class Player : MonoBehaviour
         transform.position = spawnPointPos.position;
         moveSpeed = 6;
         accelerationTimeGrounded = 0.1f;
+        maxJumpHeight = 4;
+        timeToJumpApex = 0.5f;
+        canWallSlide = true;
 
         wSystem.lShooting = false;
         wSystem.rShooting = false;

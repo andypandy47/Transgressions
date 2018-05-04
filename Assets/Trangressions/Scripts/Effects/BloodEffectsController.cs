@@ -20,7 +20,6 @@ public class BloodEffectsController : MonoBehaviour {
     {
         bool rightOfEnemy = false;
         float enemyDirX = enemy.transform.localScale.x;
-        print(enemyDirX);
 
         //Check if player is right of enemy so that we know which way to spawn the blood effect
         if (player.transform.position.x > enemy.transform.position.x)
@@ -52,7 +51,6 @@ public class BloodEffectsController : MonoBehaviour {
 
     void Flip(GameObject sprite)
     {
-        print("FlippedEffect");
         sprite.transform.localScale = new Vector3(-1, 1, 1);
     }
 
