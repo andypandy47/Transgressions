@@ -35,7 +35,10 @@ public class PlayerWeaponSystem : MonoBehaviour {
     [HideInInspector] public Transform RArm, LArm, muzzlePoint, muzzlePointSplit;
     GameObject muzzleFlashPrefab;
 
-    [HideInInspector] public Vector3 splitShootLeftArmPos = new Vector3(-.302f, -0.278f, 0), normalLeftArmPos = new Vector3(0.186f, -0.261f, 0);
+    [HideInInspector]
+    public Vector3 splitShootLeftArmPos = new Vector3(-.302f, -0.278f, 0), normalLeftArmPos = new Vector3(0.186f, -0.261f, 0),
+        rightArmJumpShootPos = new Vector3(0.178f, -0.331f, 0), leftArmJumpShootPos = new Vector3(0.157f, -0.356f, 0),
+        normalRightPos = new Vector3(0.311f, -0.277f, 0);
     Vector3 pScale;
 
     // public RaycastHit2D lHit;
@@ -44,6 +47,9 @@ public class PlayerWeaponSystem : MonoBehaviour {
     public LayerMask whatToHit;
 
     Enemy enemy;
+
+    [FMODUnity.EventRef]
+    public string gunShotFmodEvent;
 
     private void Start()
     {
@@ -87,6 +93,9 @@ public class PlayerWeaponSystem : MonoBehaviour {
             altShoot.Clear();
         }
 
+        if (player.wallSliding)
+            wState = WeaponState.NoAim;
+
         if (wState == WeaponState.SplitAim && player.hasHorInput || wState == WeaponState.HalfAim && player.hasHorInput)
         {
             wState = WeaponState.FullAim;
@@ -103,100 +112,140 @@ public class PlayerWeaponSystem : MonoBehaviour {
             hasBackwardsWalked = false;
         }
 
+        if (player.grounded && wState != WeaponState.SplitAim)
+        {
+            RArm.gameObject.transform.localPosition = normalRightPos;
+            LArm.gameObject.transform.localPosition = normalLeftArmPos;
+        }
+
     }
 
     public void RightWeaponInput()
     {
         rShooting = false;
 
-        //Check if player is not moving
-        if (!player.hasHorInput && player.grounded)
+        if (!player.wallSliding)
         {
-            //If state is idle and player is facing the wrong way, flip to face right
-            if (wState == WeaponState.NoAim && player.dir == Player.Direction.Left)
+            //Check if player is not moving
+            if (!player.hasHorInput && player.grounded)
             {
-                pAnimHandler.Flip(false);
-            }
-
-            //Check if arm is flipped from splitshoot and flip back to normal pos
-            if (lArmFlipped && wState != WeaponState.SplitAim)
-            {
-                FlipArm(LArm, normalLeftArmPos);
-            }
-
-            //If weapon state is idle, then fire and switch to state.HalfAim
-            if (wState == WeaponState.NoAim)
-            {
-                if (controller.state != Controller2D.pState.Sliding)
+                //If state is idle and player is facing the wrong way, flip to face right
+                if (wState == WeaponState.NoAim && player.dir == Player.Direction.Left)
                 {
-                    wState = WeaponState.HalfAim;
-                }
-                else
-                    wState = WeaponState.FullAim;
-                
-                RightShoot(false, false);
-            }
-            //Else if state equals half aim already then shoot with the other weapon
-            else if (wState == WeaponState.HalfAim && player.dir == Player.Direction.Right)
-            {
-                wState = WeaponState.FullAim;
-                AlternateShooting();
-            }
-            //Else if state is in full aim already and player is facing right then continue to altShoot
-            else if (wState == WeaponState.FullAim && player.dir == Player.Direction.Right)
-            {
-                AlternateShooting();
-            }
-            //Initial change to split aim
-            else if (player.dir == Player.Direction.Left && wState == WeaponState.HalfAim || player.dir == Player.Direction.Left && wState == WeaponState.FullAim)
-            {
-                wState = WeaponState.SplitAim;
-                pAnimHandler.Flip(false);
-                player.dir = Player.Direction.Split;
-
-                //Flip arm to splitshoot pos
-                if (!lArmFlipped)
-                {
-                    FlipArm(LArm, splitShootLeftArmPos);
+                    pAnimHandler.Flip(false);
                 }
 
-                rShooting = false;
-
-                RightShoot(true, true);
-            }
-            //Split aim shot
-            else if (wState == WeaponState.SplitAim)
-            {
-                if (rArmCoolDown <= 0)
-                    RightShoot(true, false);
-                else
+                //Check if arm is flipped from splitshoot and flip back to normal pos
+                if (lArmFlipped && wState != WeaponState.SplitAim)
                 {
-                    wState = WeaponState.FullAim;
-
-                    if (pScale.x == -1)
-                        pAnimHandler.Flip(false);
-                    if (lArmFlipped)
-                        FlipArm(LArm, normalLeftArmPos);
-
-                    player.dir = Player.Direction.Right;
-                    LeftShoot(false, false);
+                    FlipArm(LArm, normalLeftArmPos);
                 }
-            }
-        }
-        //If the player is running
-        else if (player.hasHorInput && player.grounded)
-        {
-            //If player is weapon idle 
-            if (wState == WeaponState.NoAim)
-            {
-                //Shoot with right and switch to full aim mode
-                if (player.dir == Player.Direction.Right)
+
+                //If weapon state is idle, then fire and switch to state.HalfAim
+                if (wState == WeaponState.NoAim)
                 {
-                    wState = WeaponState.FullAim;
+                    if (controller.state != Controller2D.pState.Sliding)
+                    {
+                        wState = WeaponState.HalfAim;
+                    }
+                    else
+                        wState = WeaponState.FullAim;
+
                     RightShoot(false, false);
                 }
-                //else if player is running left then go into backwards walk mode
-                else if (player.dir == Player.Direction.Left)
+                //Else if state equals half aim already then shoot with the other weapon
+                else if (wState == WeaponState.HalfAim && player.dir == Player.Direction.Right)
+                {
+                    wState = WeaponState.FullAim;
+                    AlternateShooting();
+                }
+                //Else if state is in full aim already and player is facing right then continue to altShoot
+                else if (wState == WeaponState.FullAim && player.dir == Player.Direction.Right)
+                {
+                    AlternateShooting();
+                }
+                //Initial change to split aim
+                else if (player.dir == Player.Direction.Left && wState == WeaponState.HalfAim || player.dir == Player.Direction.Left && wState == WeaponState.FullAim)
+                {
+                    wState = WeaponState.SplitAim;
+                    pAnimHandler.Flip(false);
+                    player.dir = Player.Direction.Split;
+
+                    //Flip arm to splitshoot pos
+                    if (!lArmFlipped)
+                    {
+                        FlipArm(LArm, splitShootLeftArmPos);
+                    }
+
+                    rShooting = false;
+
+                    RightShoot(true, true);
+                }
+                //Split aim shot
+                else if (wState == WeaponState.SplitAim)
+                {
+                    if (rArmCoolDown <= 0)
+                        RightShoot(true, false);
+                    else
+                    {
+                        wState = WeaponState.FullAim;
+
+                        if (pScale.x == -1)
+                            pAnimHandler.Flip(false);
+                        if (lArmFlipped)
+                            FlipArm(LArm, normalLeftArmPos);
+
+                        player.dir = Player.Direction.Right;
+                        LeftShoot(false, false);
+                    }
+                }
+            }
+            //If the player is running
+            else if (player.hasHorInput && player.grounded)
+            {
+                //If player is weapon idle 
+                if (wState == WeaponState.NoAim)
+                {
+                    //Shoot with right and switch to full aim mode
+                    if (player.dir == Player.Direction.Right)
+                    {
+                        wState = WeaponState.FullAim;
+                        RightShoot(false, false);
+                    }
+                    //else if player is running left then go into backwards walk mode
+                    else if (player.dir == Player.Direction.Left)
+                    {
+                        wState = WeaponState.FullAim;
+                        pAnimHandler.Flip(false);
+                        controller.state = Controller2D.pState.BackwardsWalk;
+                        player.dir = Player.Direction.Right;
+                        hasBackwardsWalked = true;
+
+                        RightShoot(false, false);
+                    }
+                }
+                //TODO: PLAYER CANT HAVE SPLIT AIM WHEN RUNNING SO GET RID OF THIS SHIT
+                else if (wState == WeaponState.SplitAim)
+                {
+                    if (rArmCoolDown <= 0)
+                        RightShoot(true, false);
+                    else
+                    {
+                        wState = WeaponState.FullAim;
+
+                        if (lArmFlipped)
+                            FlipArm(LArm, normalLeftArmPos);
+
+                        LeftShoot(false, false);
+                    }
+                }
+                //If player is in full aim mode when running to the right, do the usual alt fire
+                else if (wState == WeaponState.FullAim && player.dir == Player.Direction.Right)
+                {
+                    AlternateShooting();
+                }
+                //If player is in full aim mdoe when running to the left, switch to backwards walk
+                else if (wState == WeaponState.FullAim && player.dir == Player.Direction.Left)
                 {
                     wState = WeaponState.FullAim;
                     pAnimHandler.Flip(false);
@@ -207,66 +256,36 @@ public class PlayerWeaponSystem : MonoBehaviour {
                     RightShoot(false, false);
                 }
             }
-            //TODO: PLAYER CANT HAVE SPLIT AIM WHEN RUNNING SO GET RID OF THIS SHIT
-            else if (wState == WeaponState.SplitAim)
+            else if (!player.grounded)
             {
-                if (rArmCoolDown <= 0)
-                    RightShoot(true, false);
-                else
+                inAirShooting = true;
+                if (wState == WeaponState.NoAim)
                 {
-                    wState = WeaponState.FullAim;
-
-                    if (lArmFlipped)
-                        FlipArm(LArm, normalLeftArmPos);
-
-                    LeftShoot(false, false);
+                    //Shoot with right and switch to full aim mode
+                    if (player.dir == Player.Direction.Right)
+                    {
+                        wState = WeaponState.FullAim;
+                        LeftShoot(false, false);
+                    }
+                    else if (player.dir == Player.Direction.Left)
+                    {
+                        pAnimHandler.Flip(false);
+                        wState = WeaponState.FullAim;
+                        LeftShoot(false, false);
+                    }
+                    RArm.gameObject.transform.localPosition = rightArmJumpShootPos;
+                    LArm.gameObject.transform.localPosition = leftArmJumpShootPos;
                 }
-            }
-            //If player is in full aim mode when running to the right, do the usual alt fire
-            else if (wState == WeaponState.FullAim && player.dir == Player.Direction.Right)
-            {
-                AlternateShooting();
-            }
-            //If player is in full aim mdoe when running to the left, switch to backwards walk
-            else if (wState == WeaponState.FullAim && player.dir == Player.Direction.Left)
-            {
-                wState = WeaponState.FullAim;
-                pAnimHandler.Flip(false);
-                controller.state = Controller2D.pState.BackwardsWalk;
-                player.dir = Player.Direction.Right;
-                hasBackwardsWalked = true;
-
-                RightShoot(false, false);
+                else if (wState == WeaponState.FullAim && player.dir == Player.Direction.Right)
+                {
+                    AlternateShooting();
+                }
+                else if (wState == WeaponState.FullAim && player.dir == Player.Direction.Left)
+                {
+                    //AlternateShooting();
+                }
             }
         }
-        else if (!player.grounded)
-        {
-            inAirShooting = true;
-            if (wState == WeaponState.NoAim)
-            {
-                //Shoot with right and switch to full aim mode
-                if (player.dir == Player.Direction.Right)
-                {
-                    wState = WeaponState.FullAim;
-                    LeftShoot(false, false);
-                }
-                else if (player.dir == Player.Direction.Left)
-                {
-                    pAnimHandler.Flip(false);
-                    wState = WeaponState.FullAim;
-                    LeftShoot(false, false);
-                }
-            }
-            else if (wState == WeaponState.FullAim && player.dir == Player.Direction.Right)
-            {
-                AlternateShooting();
-            }
-            else if (wState == WeaponState.FullAim && player.dir == Player.Direction.Left)
-            {
-                //AlternateShooting();
-            }
-        }
-        
     }
 
     public void LeftWeaponInput()
@@ -276,91 +295,125 @@ public class PlayerWeaponSystem : MonoBehaviour {
 
         lShooting = false;
 
-        if (!player.hasHorInput && player.grounded)
+        if (!player.wallSliding)
         {
-            //If state is idle and player is facing the wrong way, flip to face left
-            if (wState == WeaponState.NoAim && player.dir == Player.Direction.Right)
+            if (!player.hasHorInput && player.grounded)
             {
-                pAnimHandler.Flip(false);
-            }
-
-            //Check if arm is flipped from splitshoot and flip back to normal pos
-            if (lArmFlipped && wState != WeaponState.SplitAim)
-            {
-                FlipArm(LArm, normalLeftArmPos);
-            }
-
-            //If weapon state is idle, then fire and switch to state.HalfAim
-            if (wState == WeaponState.NoAim)
-            {
-                if (controller.state != Controller2D.pState.Sliding)
+                //If state is idle and player is facing the wrong way, flip to face left
+                if (wState == WeaponState.NoAim && player.dir == Player.Direction.Right)
                 {
-                    wState = WeaponState.HalfAim;
+                    pAnimHandler.Flip(false);
                 }
-                else
+
+                //Check if arm is flipped from splitshoot and flip back to normal pos
+                if (lArmFlipped && wState != WeaponState.SplitAim)
+                {
+                    FlipArm(LArm, normalLeftArmPos);
+                }
+
+                //If weapon state is idle, then fire and switch to state.HalfAim
+                if (wState == WeaponState.NoAim)
+                {
+                    if (controller.state != Controller2D.pState.Sliding)
+                    {
+                        wState = WeaponState.HalfAim;
+                    }
+                    else
+                        wState = WeaponState.FullAim;
+
+                    RightShoot(false, false);
+                }
+                //Else if state equals half aim already then shoot with the other weapon
+                else if (wState == WeaponState.HalfAim && player.dir == Player.Direction.Left)
+                {
                     wState = WeaponState.FullAim;
-
-                RightShoot(false, false);
-            }
-            //Else if state equals half aim already then shoot with the other weapon
-            else if (wState == WeaponState.HalfAim && player.dir == Player.Direction.Left)
-            {
-                wState = WeaponState.FullAim;
-                AlternateShooting();
-            }
-            //Else if state is in full aim already and player is facing left then continue to altShoot
-            else if (wState == WeaponState.FullAim && player.dir == Player.Direction.Left)
-            {
-                AlternateShooting();
-            }
-            //Initial change to split aim
-            else if (player.dir == Player.Direction.Right && wState == WeaponState.HalfAim || player.dir == Player.Direction.Right && wState == WeaponState.FullAim)
-            {
-                wState = WeaponState.SplitAim;
-                player.dir = Player.Direction.Split;
-
-                //Flip left arm to splitshoot pos
-                if (!lArmFlipped)
-                {
-                    FlipArm(LArm, splitShootLeftArmPos);
+                    AlternateShooting();
                 }
+                //Else if state is in full aim already and player is facing left then continue to altShoot
+                else if (wState == WeaponState.FullAim && player.dir == Player.Direction.Left)
+                {
+                    AlternateShooting();
+                }
+                //Initial change to split aim
+                else if (player.dir == Player.Direction.Right && wState == WeaponState.HalfAim || player.dir == Player.Direction.Right && wState == WeaponState.FullAim)
+                {
+                    wState = WeaponState.SplitAim;
+                    player.dir = Player.Direction.Split;
 
-                LeftShoot(true, false);
-            }
-            //Split aim shot
-            else if (wState == WeaponState.SplitAim)
-            {
-                //If cooldown is done split shoot left again, else go into full left alternate shooting
-                if (lArmCoolDown <= 0)
+                    //Flip left arm to splitshoot pos
+                    if (!lArmFlipped)
+                    {
+                        FlipArm(LArm, splitShootLeftArmPos);
+                    }
+
                     LeftShoot(true, false);
-                else
+                }
+                //Split aim shot
+                else if (wState == WeaponState.SplitAim)
                 {
-                    wState = WeaponState.FullAim;
+                    //If cooldown is done split shoot left again, else go into full left alternate shooting
+                    if (lArmCoolDown <= 0)
+                        LeftShoot(true, false);
+                    else
+                    {
+                        wState = WeaponState.FullAim;
 
-                    if (pScale.x == 1)
-                        pAnimHandler.Flip(false);
-                    if (lArmFlipped)
-                        FlipArm(LArm, normalLeftArmPos);
+                        if (pScale.x == 1)
+                            pAnimHandler.Flip(false);
+                        if (lArmFlipped)
+                            FlipArm(LArm, normalLeftArmPos);
 
-                    player.dir = Player.Direction.Left;
+                        player.dir = Player.Direction.Left;
 
-                    LeftShoot(false, true);
+                        LeftShoot(false, true);
+                    }
                 }
             }
-        }
-        else if (player.hasHorInput && player.grounded)
-        {
-            //If player is weapon idle 
-            if (wState == WeaponState.NoAim)
+            else if (player.hasHorInput && player.grounded)
             {
-                //Shoot with left and switch to full aim mode
-                if (player.dir == Player.Direction.Left)
+                //If player is weapon idle 
+                if (wState == WeaponState.NoAim)
                 {
-                    wState = WeaponState.FullAim;
-                    LeftShoot(false, false);
+                    //Shoot with left and switch to full aim mode
+                    if (player.dir == Player.Direction.Left)
+                    {
+                        wState = WeaponState.FullAim;
+                        LeftShoot(false, false);
+                    }
+                    //else if player is running right then go into backwards walk mode
+                    else if (player.dir == Player.Direction.Right)
+                    {
+                        wState = WeaponState.FullAim;
+                        pAnimHandler.Flip(false);
+                        controller.state = Controller2D.pState.BackwardsWalk;
+                        player.dir = Player.Direction.Left;
+                        hasBackwardsWalked = true;
+
+                        LeftShoot(false, false);
+                    }
                 }
-                //else if player is running right then go into backwards walk mode
-                else if (player.dir == Player.Direction.Right)
+                //TODO: PLAYER CANT HAVE SPLIT AIM WHEN RUNNING SO GET RID OF THIS SHIT
+                else if (wState == WeaponState.SplitAim)
+                {
+                    if (lArmCoolDown <= 0)
+                        LeftShoot(true, false);
+                    else
+                    {
+                        wState = WeaponState.FullAim;
+
+                        if (lArmFlipped)
+                            FlipArm(LArm, normalLeftArmPos);
+
+                        LeftShoot(false, false);
+                    }
+                }
+                //If player is in full aim mode when running to the left, do the usual alt fire
+                else if (wState == WeaponState.FullAim && player.dir == Player.Direction.Left)
+                {
+                    AlternateShooting();
+                }
+                //If player is in full aim mdoe when running to the left, switch to backwards walk
+                else if (wState == WeaponState.FullAim && player.dir == Player.Direction.Right)
                 {
                     wState = WeaponState.FullAim;
                     pAnimHandler.Flip(false);
@@ -371,67 +424,38 @@ public class PlayerWeaponSystem : MonoBehaviour {
                     LeftShoot(false, false);
                 }
             }
-            //TODO: PLAYER CANT HAVE SPLIT AIM WHEN RUNNING SO GET RID OF THIS SHIT
-            else if (wState == WeaponState.SplitAim)
+            //Player is in the air
+            else if (!player.grounded)
             {
-                if (lArmCoolDown <= 0)
-                    LeftShoot(true, false);
-                else
+                inAirShooting = true;
+                if (wState == WeaponState.NoAim)
                 {
-                    wState = WeaponState.FullAim;
+                    //Shoot with left and switch to full aim mode
+                    if (player.dir == Player.Direction.Left)
+                    {
+                        wState = WeaponState.FullAim;
+                        LeftShoot(false, false);
+                    }
+                    else if (player.dir == Player.Direction.Right)
+                    {
+                        pAnimHandler.Flip(false);
+                        wState = WeaponState.FullAim;
+                        LeftShoot(false, false);
+                    }
 
-                    if (lArmFlipped)
-                        FlipArm(LArm, normalLeftArmPos);
-
-                    LeftShoot(false, false);
+                    RArm.gameObject.transform.localPosition = rightArmJumpShootPos;
+                    LArm.gameObject.transform.localPosition = leftArmJumpShootPos;
                 }
-            }
-            //If player is in full aim mode when running to the left, do the usual alt fire
-            else if (wState == WeaponState.FullAim && player.dir == Player.Direction.Left)
-            {
-                AlternateShooting();
-            }
-            //If player is in full aim mdoe when running to the left, switch to backwards walk
-            else if (wState == WeaponState.FullAim && player.dir == Player.Direction.Right)
-            {
-                wState = WeaponState.FullAim;
-                pAnimHandler.Flip(false);
-                controller.state = Controller2D.pState.BackwardsWalk;
-                player.dir = Player.Direction.Left;
-                hasBackwardsWalked = true;
-
-                LeftShoot(false, false);
+                else if (wState == WeaponState.FullAim && player.dir == Player.Direction.Left)
+                {
+                    AlternateShooting();
+                }
+                else if (wState == WeaponState.FullAim && player.dir == Player.Direction.Right)
+                {
+                    //AlternateShooting();
+                }
             }
         }
-        //Player is in the air
-        else if (!player.grounded)
-        {
-            inAirShooting = true;
-            if (wState == WeaponState.NoAim)
-            {
-                //Shoot with left and switch to full aim mode
-                if (player.dir == Player.Direction.Left)
-                {
-                    wState = WeaponState.FullAim;
-                    LeftShoot(false, false);
-                }
-                else if (player.dir == Player.Direction.Right)
-                {
-                    pAnimHandler.Flip(false);
-                    wState = WeaponState.FullAim;
-                    LeftShoot(false, false);
-                }
-            }
-            else if (wState == WeaponState.FullAim && player.dir == Player.Direction.Left)
-            {
-                AlternateShooting();
-            }
-            else if (wState == WeaponState.FullAim && player.dir == Player.Direction.Right)
-            {
-                //AlternateShooting();
-            }
-        }
-        
     }
 
     void RightShoot(bool splitShot, bool ignoreCoolDown)
@@ -601,6 +625,8 @@ public class PlayerWeaponSystem : MonoBehaviour {
 
         if (!player.grounded)
             airKickBack.KickBack();
+
+        FMODUnity.RuntimeManager.PlayOneShot(gunShotFmodEvent, transform.position);
     }
 
     public void FlipArm(Transform arm, Vector3 newPos)
@@ -612,6 +638,7 @@ public class PlayerWeaponSystem : MonoBehaviour {
         Vector3 theScale = arm.transform.localScale;
         theScale.x *= -1;
         arm.transform.localScale = theScale;
+        print("Arm flipped");
     }
 
     void FlipFlash(GameObject flash)

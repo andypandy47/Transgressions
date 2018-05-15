@@ -6,6 +6,7 @@ public class BloodParticle : MonoBehaviour {
 
     ParticleSystem ps;
     public Splatter splatter;
+    Player player;
 
     int splatters;
 
@@ -13,10 +14,15 @@ public class BloodParticle : MonoBehaviour {
 
     private List<ParticleCollisionEvent> collisionEvents = new List<ParticleCollisionEvent>();
 
+    [FMODUnity.EventRef]
+    public string splatAudioEvent;
+    FMOD.Studio.EventInstance splatEvent;
+
     private void Start()
     {
         ps = GetComponent<ParticleSystem>();
         splatters = 0;
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
 
     private void OnParticleCollision(GameObject other)
@@ -32,10 +38,19 @@ public class BloodParticle : MonoBehaviour {
         {
             Vector3 collisionHitLoc = collisionEvents[i].intersection;
             GameObject splat = ObjectPooler.sharedInstance.GetSplatter("Splatter");
+
             if (splat != null)
             {
                 splat.transform.position = collisionHitLoc;
                 splat.transform.rotation = Quaternion.identity;
+
+                float distance = Vector3.Distance(collisionHitLoc, player.transform.position);
+                float distancePercent = (distance / 20);
+                distancePercent = Mathf.Clamp01(distancePercent);
+                splatEvent = FMODUnity.RuntimeManager.CreateInstance(splatAudioEvent);
+                splatEvent.setParameterValue("Distance", distancePercent);
+                splatEvent.start();
+                splatEvent.release();
                 
                 if (collisionEvents[i].colliderComponent.tag == "Platform")
                 {

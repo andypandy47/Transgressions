@@ -12,6 +12,9 @@ public class PlayerAnimHandler : MonoBehaviour {
     public RArmAnimHandler rArmAnim;
     public LArmAnimHandler lArmAnim;
 
+    [FMODUnity.EventRef]
+    public string footstepAudio;
+
     private void Start()
     {
         anim = GetComponent<Animator>();
@@ -139,5 +142,10 @@ public class PlayerAnimHandler : MonoBehaviour {
         }
         yield return new WaitForSeconds(2f);
         dustFX.SetActive(false);
+    }
+    
+    void PlayFootstep()
+    {
+        //FMODUnity.RuntimeManager.PlayOneShot(footstepAudio, transform.position);
     }
 }
