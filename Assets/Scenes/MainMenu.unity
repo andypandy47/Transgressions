@@ -6638,6 +6638,7 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2040290414}
+<<<<<<< HEAD
 --- !u!1 &2072779106
 GameObject:
   m_ObjectHideFlags: 0
@@ -6834,3 +6835,5 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: faf007e0838348040ba28455155bb7e9, type: 2}
   m_IsPrefabParent: 0
+=======
+>>>>>>> parent of 3a2e1d4... shit ui change
