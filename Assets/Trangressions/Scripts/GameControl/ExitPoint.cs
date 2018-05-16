@@ -13,7 +13,7 @@ public class ExitPoint : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "PlayerCollider")
+        if (collision.gameObject.tag == "Player")
         {
             print("Exit point reached");
             wc.reachedExit = true;

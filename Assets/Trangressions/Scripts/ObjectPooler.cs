@@ -27,16 +27,8 @@ public class ObjectPooler : MonoBehaviour {
 
     private void Awake()
     {
-        if (!sharedInstance)
-        {
+        if (sharedInstance == null)
             sharedInstance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-            
     }
 
     private void Start()
@@ -46,10 +38,10 @@ public class ObjectPooler : MonoBehaviour {
 
     public void RestartPool()
     {
-      //  if (GameController.gc.firstRun)
-       // {
+        if (initialLoad)
+        {
             pooledObjects.Clear();
-            splatterParent = transform.GetChild(0).gameObject;
+            splatterParent = GameObject.FindGameObjectWithTag("SplatterParent");
 
             pooledObjects = new List<GameObject>();
             splatterPool = new List<GameObject>();
@@ -69,7 +61,7 @@ public class ObjectPooler : MonoBehaviour {
             //Specifically for splatter pooling
             for (int i = 0; i < amountToSplatterPool; i++)
             {
-                GameObject obj = (GameObject)Instantiate(splatter, splatterParent.transform);
+                GameObject obj = Instantiate(splatter, splatterParent.transform);
                 obj.SetActive(false);
                 splatterPool.Add(obj);
             }
@@ -83,11 +75,11 @@ public class ObjectPooler : MonoBehaviour {
 
             for (int i = 0; i < splatterPool.Count; i++)
             {
-                DontDestroyOnLoad(splatterPool[i].gameObject);
+                //DontDestroyOnLoad(splatterPool[i].gameObject);
             }
-            print("Pool restart");
 
-       // }
+            initialLoad = false;
+        }
 
         
     }
@@ -133,16 +125,12 @@ public class ObjectPooler : MonoBehaviour {
     {
         for (int i = 0; i < splatterPool.Count; i++)
         {
-            //DontDestroyOnLoad(splatterPool[i].gameObject);
             splatterPool[i].SetActive(false);
         }
 
         for (int i = 0; i < pooledObjects.Count; i++)
         {
-            pooledObjects[i].transform.parent = null;
-            DontDestroyOnLoad(pooledObjects[i].gameObject);
             pooledObjects[i].SetActive(false);
-            print("Add muzzleFlash to dont destroy on load");
         }
     }
 }

@@ -10,6 +10,7 @@ public class PauseMenu : MonoBehaviour {
     private void Awake()
     {
         pauseMenuUI = transform.GetChild(0).gameObject;
+        print("pStart");
         if (isPaused)
             Resume();
     }

@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4749046465209928}
   - component: {fileID: 114599529189073824}
+  - component: {fileID: 114761092993960702}
   - component: {fileID: 114310025916471072}
   - component: {fileID: 114361718722005650}
   - component: {fileID: 114645800915055468}
@@ -117,7 +118,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70a56ebe196ce544bb521b05fb73e3f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timerInterval: 0.5
 --- !u!114 &114645800915055468
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -143,3 +143,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25235368468d79c4ca47111a9072eece, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114761092993960702
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1331293507168088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fd3ad92ba861f94baa90b9926411514, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemsToPool:
+  - objectToPool: {fileID: 1255514729502140, guid: eb847847e0d704a4c9d1ca517ad44104,
+      type: 2}
+    amountToPool: 2
+  - objectToPool: {fileID: 1141195504547994, guid: 285c2dbc2f60b83449021cc6a8f44545,
+      type: 2}
+    amountToPool: 5
+  pooledObjects: []
+  splatter: {fileID: 1677868404810284, guid: c08cd246f3bb1c74a97263c1e7aae0bc, type: 2}
+  amountToSplatterPool: 100
+  splatterPool: []
+  initialLoad: 1

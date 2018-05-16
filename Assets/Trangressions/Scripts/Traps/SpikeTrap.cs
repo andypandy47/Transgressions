@@ -13,7 +13,7 @@ public class SpikeTrap : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "PlayerCollider")
+        if (collision.tag == "Player")
         {
             player.alive = false;
         }

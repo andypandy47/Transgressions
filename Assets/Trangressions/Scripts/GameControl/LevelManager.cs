@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour {
 
@@ -16,9 +15,7 @@ public class LevelManager : MonoBehaviour {
 
     GameObject playerObj;
     GameObject UICanvas;
-    
     Transform spawnPoint;
-    public float timerInterval;
 
     private void Awake()
     {
@@ -34,17 +31,6 @@ public class LevelManager : MonoBehaviour {
         bEffects = GetComponent<BloodEffectsController>();
         pManager = GetComponent<PlatformManager>();
         sCalc = GetComponent<ScoreCalculator>();
-        
-    }
-
-    private void Start()
-    {
-        if (GameController.gc.firstRun)
-        {
-            print("First run");
-            StartCoroutine(FirstRunCount());
-        }
-        CheckScene();
     }
 
     private void Update()
@@ -88,7 +74,7 @@ public class LevelManager : MonoBehaviour {
         yield return false;
     }
 
-    public IEnumerator ResetForNextLevel()
+    public IEnumerator NextLevel()
     {
         print("Next Level");
         wc.ResetConditions();
@@ -96,35 +82,6 @@ public class LevelManager : MonoBehaviour {
         ObjectPooler.sharedInstance.DeactivatePooledObjects();
 
         yield return false;
-    }
-
-    public IEnumerator FirstRunCount()
-    {
-        pMenu.Pause(false);
-        UIMenus.DisplayCountDown("3");
-        yield return new WaitForSecondsRealtime(timerInterval);
-        UIMenus.DisplayCountDown("2");
-        yield return new WaitForSecondsRealtime(timerInterval);
-        UIMenus.DisplayCountDown("1");
-        yield return new WaitForSecondsRealtime(timerInterval);
-        UIMenus.DisplayCountDown("GO!");
-        pMenu.Resume();
-        GameController.gc.firstRun = false;
-
-        yield return StartCoroutine(UIMenus.FadeCountDownText());
-        UIMenus.DisplayCountDown("");
-    }
-
-    void CheckScene()
-    {
-        if (SceneManager.GetActiveScene().buildIndex == 3)
-        {
-            MusicManager.instance.Progression01();
-        }
-        else if (SceneManager.GetActiveScene().buildIndex == 5)
-        {
-            MusicManager.instance.Progression02();
-        }
     }
 
 

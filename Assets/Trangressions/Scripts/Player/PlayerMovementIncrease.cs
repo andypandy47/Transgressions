@@ -28,9 +28,6 @@ public class PlayerMovementIncrease : MonoBehaviour {
                 if (controller.collisions.descendingSlope)
                 {
                     groundAccel += groundAccelIncreaseAmount * 100 * Time.deltaTime;
-                    moveSpeed += (moveSpeedIncreaseAmount * 2f) * Time.deltaTime;
-                    maxJumpHeight += (jumpIncreaseAmount * 2f) * Time.deltaTime;
-                    print("descending slope");
                 }
                 else
                 {

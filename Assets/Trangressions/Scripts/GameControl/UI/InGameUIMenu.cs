@@ -11,17 +11,15 @@ public class InGameUIMenu : MonoBehaviour {
     LevelManager lManager;
     GameObject exitPoint;
 
-    [HideInInspector]
-    public GameObject loseMenu, winMenu, countDownUI;
+    GameObject loseMenu;
+    GameObject winMenu;
 
     TextMeshProUGUI scoreText;
     TextMeshProUGUI timerText;
     TextMeshProUGUI killsText;
     TextMeshProUGUI rankText;
 
-    TextMeshProUGUI countDownText;
-
-    private void Awake()
+    private void Start()
     {
         pMenu = GetComponent<PauseMenu>();
         exitPoint = GameObject.FindGameObjectWithTag("ExitPoint");
@@ -29,15 +27,11 @@ public class InGameUIMenu : MonoBehaviour {
 
         loseMenu = transform.GetChild(1).gameObject;
         winMenu = transform.GetChild(2).gameObject;
-        countDownUI = transform.GetChild(4).gameObject;
 
         scoreText = winMenu.transform.GetChild(1).GetComponentInChildren<TextMeshProUGUI>();
         timerText = winMenu.transform.GetChild(2).GetComponentInChildren<TextMeshProUGUI>();
         killsText = winMenu.transform.GetChild(3).GetComponentInChildren<TextMeshProUGUI>();
         rankText = winMenu.transform.GetChild(4).GetComponentInChildren<TextMeshProUGUI>();
-        countDownText = countDownUI.GetComponent<TextMeshProUGUI>();
-        print("Levelmanager start");
-
     }
 
     public void RestartLevel()
@@ -96,26 +90,7 @@ public class InGameUIMenu : MonoBehaviour {
 
     public void NextLevel()
     {
-        StartCoroutine(lManager.ResetForNextLevel());
+        StartCoroutine(lManager.NextLevel());
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1, LoadSceneMode.Single);
-    }
-
-    public void DisplayCountDown(string text)
-    {
-        if (!countDownUI.activeInHierarchy)
-            countDownUI.SetActive(true);
-
-        countDownText.text = text;
-    }
-
-    public IEnumerator FadeCountDownText()
-    {
-        for (float f = 1f; f >= 0; f -= 0.1f)
-        {
-            Color c = countDownText.color;
-            c.a = f;
-            countDownText.color = c;
-            yield return new WaitForSeconds(0.05f);
-        }
     }
 }

@@ -37,7 +37,6 @@ public class Player : MonoBehaviour
     public float normalMoveSpeed = 6;
     public float backwardsWalkMoveSpeed = 3;
     float moveSpeed = 6;
-    public int playerDir;
 
     public Vector2 wallJumpClimb;
     public Vector2 wallJumpOff;
@@ -181,13 +180,6 @@ public class Player : MonoBehaviour
             dir = Direction.Split;
         }
 
-        if (dir == Direction.Right)
-            playerDir = 1;
-        else if (dir == Direction.Left)
-            playerDir = -1;
-        else if (dir == Direction.Split)
-            playerDir = 0;
-
         #endregion
 
       /*  if (grounded && !hasHorInput && velocity.x == 0 && !controller.collisions.slidingDownMaxSlope)
@@ -291,13 +283,6 @@ public class Player : MonoBehaviour
                 print("wall leap");
             }
             StartCoroutine(pAnimHandler.WallDustFX(wallDirX));
-
-            if (playerDir == wallDirX)
-            {
-                pAnimHandler.Flip(false);
-                print("Wrong jump direction");
-            }
-                
         }
         if (controller.collisions.below)
         {
@@ -333,11 +318,6 @@ public class Player : MonoBehaviour
         wallSliding = false;
         if ((controller.collisions.left || controller.collisions.right) && !controller.collisions.below && velocity.y <= 6)
         {
-            if (playerDir != wallDirX)
-                pAnimHandler.Flip(false);
-
-            
-
             wallSliding = true;
             if (canWallSlide)
             {

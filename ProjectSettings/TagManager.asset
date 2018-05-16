@@ -19,8 +19,6 @@ TagManager:
   - SpikeTrap
   - DustCloud
   - LevelManager
-  - CountdownText
-  - PlayerCollider
   layers:
   - Default
   - TransparentFX

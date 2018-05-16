@@ -21,9 +21,6 @@ public class Enemy : MonoBehaviour {
     public bool isTarget;
     public GameObject targetPointer;
 
-    [FMODUnity.EventRef]
-    public string hitEventAudio;
-
     private void Awake()
     {
         dead = false;
@@ -52,8 +49,6 @@ public class Enemy : MonoBehaviour {
         {
             KillEnemy(player);
         }
-
-        FMODUnity.RuntimeManager.PlayOneShot(hitEventAudio, transform.position);
     }
 
     public void KillEnemy(Player player)

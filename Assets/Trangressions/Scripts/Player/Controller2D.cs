@@ -116,7 +116,7 @@ public class Controller2D : RaycastController
 
         if (collisions.climbingSlope)
         {
-
+            print("Climbing Slope");
         }
     }
 
