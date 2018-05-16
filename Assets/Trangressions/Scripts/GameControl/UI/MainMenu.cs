@@ -8,25 +8,51 @@ public class MainMenu : MonoBehaviour {
     public enum CurrentScreen
     {
         MainMenu,
-        MissionSelect,
+        SectionSelection,
+        MissionSelection,
         Help,
         Options
     }
     public CurrentScreen screen;
     GameObject instructionScreen;
-    GameObject missionSelectScreen;
+    GameObject sectionSelectionScreen;
+    public GameObject[] missionSelectScreens;
 
     private void Start()
     {
         instructionScreen = transform.GetChild(1).gameObject;
-        missionSelectScreen = transform.GetChild(2).gameObject;
+        sectionSelectionScreen = transform.GetChild(2).gameObject;
+
         screen = CurrentScreen.MainMenu;
     }
 
-    public void MissionSelect()
+    public void SectionSelect()
     {
-        missionSelectScreen.SetActive(true);
-        screen = CurrentScreen.MissionSelect;
+        sectionSelectionScreen.SetActive(true);
+        for (int i = 0; i < 2; i++)
+        {
+            if (!sectionSelectionScreen.transform.GetChild(i).gameObject.activeInHierarchy)
+                sectionSelectionScreen.transform.GetChild(i).gameObject.SetActive(true);
+            else
+                continue;
+        }
+        screen = CurrentScreen.SectionSelection;
+    }
+
+    public void Section1Select()
+    {
+        for (int i = 0; i < 2; i++)
+        {
+            sectionSelectionScreen.transform.GetChild(i).gameObject.SetActive(false);
+        }
+        missionSelectScreens[0].SetActive(true);
+        screen = CurrentScreen.MissionSelection;
+        print("Section 1 select scree");
+    }
+
+    public void Section2Select()
+    {
+        screen = CurrentScreen.MissionSelection;
     }
 
     public void Help()
@@ -42,10 +68,21 @@ public class MainMenu : MonoBehaviour {
             instructionScreen.SetActive(false);
             screen = CurrentScreen.MainMenu;
         }
-        else if (screen == CurrentScreen.MissionSelect)
+        else if (screen == CurrentScreen.SectionSelection)
         {
-            missionSelectScreen.SetActive(false);
+            sectionSelectionScreen.SetActive(false);
             screen = CurrentScreen.MainMenu;
+        }
+        else if (screen == CurrentScreen.MissionSelection)
+        {
+            for (int i = 0; i < missionSelectScreens.Length; i++)
+            {
+                if (missionSelectScreens[i].activeInHierarchy)
+                    missionSelectScreens[i].SetActive(false);
+                else
+                    continue;
+            }
+            SectionSelect();
         }
 
     }
