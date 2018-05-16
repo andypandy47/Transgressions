@@ -1,0 +1,383 @@
+fileFormatVersion: 2
+guid: c88cfff744bfe344da96f65c1c9472d6
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: glitch_smuggler_0
+    21300002: glitch_smuggler_1
+    21300004: glitch_smuggler_2
+    21300006: glitch_smuggler_3
+    21300008: glitch_smuggler_4
+    21300010: glitch_smuggler_5
+    21300012: glitch_smuggler_6
+    21300014: glitch_smuggler_7
+    21300016: glitch_smuggler_8
+    21300018: glitch_smuggler_9
+    21300020: glitch_smuggler_10
+    21300022: glitch_smuggler_11
+    21300024: glitch_smuggler_12
+    21300026: glitch_smuggler_13
+    21300028: glitch_smuggler_14
+    21300030: glitch_smuggler_15
+    21300032: glitch_smuggler_16
+    21300034: glitch_smuggler_17
+    21300036: glitch_smuggler_18
+    21300038: glitch_smuggler_19
+    21300040: glitch_smuggler_20
+    21300042: glitch_smuggler_21
+    21300044: glitch_smuggler_22
+    21300046: glitch_smuggler_23
+    21300048: glitch_smuggler_24
+    21300050: glitch_smuggler_25
+    21300052: glitch_smuggler_26
+    21300054: glitch_smuggler_27
+    21300056: glitch_smuggler_28
+    21300058: glitch_smuggler_29
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: .25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 8
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 1024
+  textureSettings:
+    filterMode: -1
+    aniso: 1
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: .5, y: .5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: glitch_smuggler_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1859
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_1
+      rect:
+        serializedVersion: 2
+        x: 251
+        y: 1859
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_2
+      rect:
+        serializedVersion: 2
+        x: 502
+        y: 1859
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1672
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_4
+      rect:
+        serializedVersion: 2
+        x: 251
+        y: 1672
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_5
+      rect:
+        serializedVersion: 2
+        x: 502
+        y: 1672
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1485
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_7
+      rect:
+        serializedVersion: 2
+        x: 251
+        y: 1485
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_8
+      rect:
+        serializedVersion: 2
+        x: 502
+        y: 1485
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_9
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1298
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_10
+      rect:
+        serializedVersion: 2
+        x: 251
+        y: 1298
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_11
+      rect:
+        serializedVersion: 2
+        x: 502
+        y: 1298
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1111
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_13
+      rect:
+        serializedVersion: 2
+        x: 251
+        y: 1111
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_14
+      rect:
+        serializedVersion: 2
+        x: 502
+        y: 1111
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_15
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 924
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_16
+      rect:
+        serializedVersion: 2
+        x: 251
+        y: 924
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_17
+      rect:
+        serializedVersion: 2
+        x: 502
+        y: 924
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_18
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 737
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_19
+      rect:
+        serializedVersion: 2
+        x: 251
+        y: 737
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_20
+      rect:
+        serializedVersion: 2
+        x: 502
+        y: 737
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_21
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 550
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_22
+      rect:
+        serializedVersion: 2
+        x: 251
+        y: 550
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_23
+      rect:
+        serializedVersion: 2
+        x: 502
+        y: 550
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 363
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_25
+      rect:
+        serializedVersion: 2
+        x: 251
+        y: 363
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_26
+      rect:
+        serializedVersion: 2
+        x: 502
+        y: 363
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_27
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 176
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_28
+      rect:
+        serializedVersion: 2
+        x: 251
+        y: 176
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: glitch_smuggler_29
+      rect:
+        serializedVersion: 2
+        x: 502
+        y: 176
+        width: 251
+        height: 187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
