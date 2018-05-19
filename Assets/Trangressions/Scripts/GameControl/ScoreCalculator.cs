@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ScoreCalculator : MonoBehaviour {
-
-    public static ScoreCalculator sCalc;
-
     LevelTimer timer;
 
     [HideInInspector] public int nbKilled, killScore;
@@ -16,12 +13,6 @@ public class ScoreCalculator : MonoBehaviour {
     public int DGradeScore;
     
     int finalScore;
-
-    private void Awake()
-    {
-        if (sCalc == null)
-            sCalc = this;
-    }
 
     private void Start()
     {

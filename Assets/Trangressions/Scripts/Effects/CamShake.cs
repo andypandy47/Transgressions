@@ -8,13 +8,8 @@ public class CamShake : MonoBehaviour {
     CinemachineVirtualCamera vCam;
     CinemachineBasicMultiChannelPerlin noise;
 
-    public static CamShake camShake;
-
     private void Awake()
     {
-        if (camShake == null)
-            camShake = this;
-
         vCam = GameObject.Find("CM vcam1").GetComponent<CinemachineVirtualCamera>();
         noise = vCam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
     }

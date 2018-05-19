@@ -27,8 +27,16 @@ public class ObjectPooler : MonoBehaviour {
 
     private void Awake()
     {
-        if (sharedInstance == null)
+        if (!sharedInstance)
+        {
             sharedInstance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+            
     }
 
     private void Start()
@@ -38,10 +46,10 @@ public class ObjectPooler : MonoBehaviour {
 
     public void RestartPool()
     {
-        if (initialLoad)
-        {
+      //  if (GameController.gc.firstRun)
+       // {
             pooledObjects.Clear();
-            splatterParent = GameObject.FindGameObjectWithTag("SplatterParent");
+            splatterParent = transform.GetChild(0).gameObject;
 
             pooledObjects = new List<GameObject>();
             splatterPool = new List<GameObject>();
@@ -61,7 +69,7 @@ public class ObjectPooler : MonoBehaviour {
             //Specifically for splatter pooling
             for (int i = 0; i < amountToSplatterPool; i++)
             {
-                GameObject obj = Instantiate(splatter, splatterParent.transform);
+                GameObject obj = (GameObject)Instantiate(splatter, splatterParent.transform);
                 obj.SetActive(false);
                 splatterPool.Add(obj);
             }
@@ -75,11 +83,11 @@ public class ObjectPooler : MonoBehaviour {
 
             for (int i = 0; i < splatterPool.Count; i++)
             {
-                //DontDestroyOnLoad(splatterPool[i].gameObject);
+                DontDestroyOnLoad(splatterPool[i].gameObject);
             }
+            print("Pool restart");
 
-            initialLoad = false;
-        }
+       // }
 
         
     }
@@ -125,11 +133,14 @@ public class ObjectPooler : MonoBehaviour {
     {
         for (int i = 0; i < splatterPool.Count; i++)
         {
+            //DontDestroyOnLoad(splatterPool[i].gameObject);
             splatterPool[i].SetActive(false);
         }
 
         for (int i = 0; i < pooledObjects.Count; i++)
         {
+            pooledObjects[i].transform.parent = null;
+            DontDestroyOnLoad(pooledObjects[i].gameObject);
             pooledObjects[i].SetActive(false);
         }
     }

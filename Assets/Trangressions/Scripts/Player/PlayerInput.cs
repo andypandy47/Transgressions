@@ -8,6 +8,7 @@ public class PlayerInput : MonoBehaviour
     PlayerWeaponSystem wSystem;
     PauseMenu pMenu;
     LevelManager lManager;
+    InGameUIMenu gameUI;
 
     void Start()
     {
@@ -15,6 +16,7 @@ public class PlayerInput : MonoBehaviour
         wSystem = GetComponent<PlayerWeaponSystem>();
         pMenu = GameObject.FindGameObjectWithTag("UICanvas").GetComponent<PauseMenu>();
         lManager = GameObject.FindGameObjectWithTag("LevelManager").GetComponent<LevelManager>();
+        gameUI = GameObject.FindGameObjectWithTag("UICanvas").GetComponent<InGameUIMenu>();
     }
 
     void Update()
@@ -50,10 +52,14 @@ public class PlayerInput : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (!PauseMenu.isPaused)
-                pMenu.Pause(true);
-            else
-                pMenu.Resume();
+            if (!gameUI.loseMenu.activeInHierarchy && !gameUI.winMenu.activeInHierarchy)
+            {
+               if (!PauseMenu.isPaused)
+                    pMenu.Pause(true);
+                else
+                    pMenu.Resume();
+            }
+            
         }
     }
 }

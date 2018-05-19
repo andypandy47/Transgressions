@@ -65,7 +65,6 @@ public class WinConditions : MonoBehaviour {
         {
             if (!targetKilled)
             {
-                print("Target not killed");
                 for (int i = 0; i < allEnemies.Length; i++)
                 {
                     if (allEnemies[i].isTarget && allEnemies[i].dead)

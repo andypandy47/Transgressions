@@ -103,6 +103,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1822120503310158
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4266075785072024}
+  - component: {fileID: 70763181402420236}
+  m_Layer: 10
+  m_Name: PlayerCollision
+  m_TagString: PlayerCollider
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &4009459912549956
 Transform:
   m_ObjectHideFlags: 1
@@ -142,6 +158,19 @@ Transform:
   m_Father: {fileID: 4863889935467904}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4266075785072024
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1822120503310158}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.48, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4863889935467904}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4788725350673796
 Transform:
   m_ObjectHideFlags: 1
@@ -162,13 +191,14 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1440477903142126}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -17.5, y: 5.35, z: 0}
+  m_LocalPosition: {x: -17.5, y: -6.74, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4231057419347044}
   - {fileID: 4788725350673796}
   - {fileID: 4081760710484550}
   - {fileID: 4009459912549956}
+  - {fileID: 4266075785072024}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -217,6 +247,21 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.4481809, y: 1.0157378}
   m_EdgeRadius: 0
+--- !u!70 &70763181402420236
+CapsuleCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1822120503310158}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.0111608505, y: -0.015625}
+  m_Size: {x: 0.27232552, y: 0.90625095}
+  m_Direction: 0
 --- !u!95 &95016110803804000
 Animator:
   serializedVersion: 3
@@ -291,8 +336,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeedIncreaseAmount: 1
-  groundAccelIncreaseAmount: 0.05
+  groundAccelIncreaseAmount: 0.03
   airAccelIncreaseAmount: 0
+  jumpIncreaseAmount: 0.3
 --- !u!114 &114195327053496532
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -337,6 +383,7 @@ MonoBehaviour:
   anim: {fileID: 0}
   rArmAnim: {fileID: 0}
   lArmAnim: {fileID: 0}
+  footstepAudio: event:/SFX/Player/Footstep
 --- !u!114 &114392553968734808
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -385,7 +432,7 @@ MonoBehaviour:
   testPrefab: {fileID: 1272769260667210, guid: ec472653a5d3558409c5720960679ba6, type: 2}
   wState: 0
   fireRate: 0.2
-  timeToIdle: 3
+  timeToIdle: 0.7
   range: 15
   rShooting: 0
   lShooting: 0
@@ -403,6 +450,7 @@ MonoBehaviour:
   whatToHit:
     serializedVersion: 2
     m_Bits: 2048
+  gunShotFmodEvent: event:/SFX/Player/Gunshot
 --- !u!114 &114974321198746318
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -423,6 +471,7 @@ MonoBehaviour:
   accelerationTimeGrounded: 0.1
   normalMoveSpeed: 6
   backwardsWalkMoveSpeed: 3
+  playerDir: 0
   wallJumpClimb: {x: 5, y: 16}
   wallJumpOff: {x: 0, y: 0}
   wallLeap: {x: 11, y: 20}

@@ -13,25 +13,28 @@ public class MainMenu : MonoBehaviour {
         Options
     }
     public CurrentScreen screen;
-    GameObject instructionScreen;
+    GameObject mainMenu;
+   // GameObject instructionScreen;
     GameObject missionSelectScreen;
 
     private void Start()
     {
-        instructionScreen = transform.GetChild(1).gameObject;
-        missionSelectScreen = transform.GetChild(2).gameObject;
+        mainMenu = transform.GetChild(0).gameObject;
+        //instructionScreen = transform.GetChild(1).gameObject;
+        missionSelectScreen = transform.GetChild(1).gameObject;
         screen = CurrentScreen.MainMenu;
     }
 
     public void MissionSelect()
     {
+        mainMenu.SetActive(false);
         missionSelectScreen.SetActive(true);
         screen = CurrentScreen.MissionSelect;
     }
 
     public void Help()
     {
-        instructionScreen.SetActive(true);
+        //instructionScreen.SetActive(true);
         screen = CurrentScreen.Help;
     }
 
@@ -39,7 +42,7 @@ public class MainMenu : MonoBehaviour {
     {
         if (screen == CurrentScreen.Help)
         {
-            instructionScreen.SetActive(false);
+           // instructionScreen.SetActive(false);
             screen = CurrentScreen.MainMenu;
         }
         else if (screen == CurrentScreen.MissionSelect)

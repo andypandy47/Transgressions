@@ -18,21 +18,10 @@ public class GameController : MonoBehaviour {
         TutorialSection,
         Section1
     }
+    public GameState gState;
 
-    Player player;
-    public LevelTimer lTime;
-    public WinConditions wc;
-    BloodEffectsController bEffects;
-    InGameUIMenu UIMenus;
-    PlatformManager pManager;
-    ScoreCalculator sCalc;
-    GameObject playerObj;
-    GameObject UICanvas;
-    GameObject lManager;
-    Transform spawnPoint;
-
-    public PauseMenu pMenu;
     string currentScene;
+    public bool firstRun;
 
     private void Awake()
     {
@@ -43,86 +32,16 @@ public class GameController : MonoBehaviour {
         }
         else
             Destroy(gameObject);
+
+        gState = GameState.MainMenu;
+        
     }
 
     private void Start()
     {
-
+        firstRun = true;
+        print("GC first run");
     }
 
-  /*  public void StartController()
-    {
-        playerObj = GameObject.FindGameObjectWithTag("Player");
-        UICanvas = GameObject.FindGameObjectWithTag("UICanvas");
-        spawnPoint = GameObject.FindGameObjectWithTag("SpawnPoint").transform;
 
-        player = playerObj.GetComponent<Player>();
-        pMenu = UICanvas.GetComponent<PauseMenu>();
-        UIMenus = UICanvas.GetComponent<InGameUIMenu>();
-        lTime = lManager.GetComponent<LevelTimer>();
-        wc = lManager.GetComponent<WinConditions>();
-        bEffects = lManager.GetComponent<BloodEffectsController>();
-        pManager = lManager.GetComponent<PlatformManager>();
-        sCalc = lManager.GetComponent<ScoreCalculator>();
-
-        print("Reset controller");
-    }
-
-    private void Update()
-    {
-        if (!wc.playerLost)
-            CheckPlayerLost();
-    }
-
-    public void CheckPlayerLost()
-    {
-        if (lTime.currentTime <= 0 || !player.alive)
-        {
-            wc.playerLost = true;
-            pMenu.Pause(false);
-            UIMenus.LoseMenu();
-        }
-    }
-
-    public void PlayerWin()
-    {
-        pMenu.Pause(false);
-        UIMenus.WinMenu(sCalc.levelCompleteScore, sCalc.CalculateTimeScore(), sCalc.killScore, sCalc.CalculateRank());
-    }
-
-    public void RestartCurrenLevel()
-    {
-        lTime.RestartTimer();
-        wc.ResetConditions();
-        bEffects.ResetSprites();
-        player.ResetToSpawnPosition(spawnPoint);
-
-        pMenu.Resume();
-        player.reset = false;
-
-    }
-
-    public IEnumerator RestartLevel()
-    {
-        print("Restart level");
-
-        lTime.RestartTimer();
-        wc.ResetConditions();
-        bEffects.ResetSprites();
-        player.ResetToSpawnPosition(spawnPoint);
-        pManager.ResetAllPlatforms();
-        sCalc.ResetScore();
-        ObjectPooler.sharedInstance.ResetSplatters();
-
-        pMenu.Resume();
-        yield return new WaitForSeconds(0.1f);
-        player.reset = false;
-        
-        yield return false;
-    }
-
-    private void OnLevelWasLoaded(int level)
-    {
-        
-    }*/
 }

@@ -6,6 +6,7 @@ public class Enemy : MonoBehaviour {
 
     BoxCollider2D collider;
     LevelTimer lTime;
+    ScoreCalculator sCalc;
 
     public enum EnemyType
     {
@@ -21,6 +22,9 @@ public class Enemy : MonoBehaviour {
     public bool isTarget;
     public GameObject targetPointer;
 
+    [FMODUnity.EventRef]
+    public string hitEventAudio;
+
     private void Awake()
     {
         dead = false;
@@ -30,6 +34,7 @@ public class Enemy : MonoBehaviour {
     {
         collider = GetComponent<BoxCollider2D>();
         lTime = GameObject.FindGameObjectWithTag("LevelManager").GetComponent<LevelTimer>();
+        sCalc = lTime.gameObject.GetComponent<ScoreCalculator>();
         bloodPos = transform.GetChild(0).transform;
 
         health = startingHealth;
@@ -49,6 +54,8 @@ public class Enemy : MonoBehaviour {
         {
             KillEnemy(player);
         }
+
+        FMODUnity.RuntimeManager.PlayOneShot(hitEventAudio, transform.position);
     }
 
     public void KillEnemy(Player player)
@@ -56,7 +63,7 @@ public class Enemy : MonoBehaviour {
         if (isTarget)
             Destroy(transform.GetChild(1).gameObject);
 
-        ScoreCalculator.sCalc.AddEnemyToScore(eType);
+        sCalc.AddEnemyToScore(eType);
         lTime.IncreaseTime(1);
         BloodEffectsController.bFXController.SpawnBloodEffect(this, player);
 

@@ -32,6 +32,15 @@ public class LArmAnimHandler : MonoBehaviour {
         anim.SetBool("ResetArms", player.reset);
     }
 
+    public IEnumerator ResetArm()
+    {
+        anim.SetBool("ResetArms", true);
+
+        yield return new WaitForSeconds(0.1f);
+
+        anim.SetBool("ResetArms", false);
+    }
+
     void LShootEnd()
     {
         wSystem.lShooting = false;
