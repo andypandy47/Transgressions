@@ -50,6 +50,8 @@ public class WinConditions : MonoBehaviour {
             exitPoint = GameObject.FindGameObjectWithTag("ExitPoint");
         }
 
+        playerLost = false;
+
         print("Win conditions start");
     }
 

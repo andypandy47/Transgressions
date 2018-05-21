@@ -16,6 +16,12 @@ public class SpikeTrap : MonoBehaviour {
         if (collision.tag == "PlayerCollider")
         {
             player.alive = false;
+            print("Player dead");
+        }
+
+        if (collision)
+        {
+           // print("Trap collided with something " + collision.gameObject.name);
         }
     }
 }

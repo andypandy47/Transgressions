@@ -292,9 +292,6 @@ public class PlayerWeaponSystem : MonoBehaviour {
 
     public void LeftWeaponInput()
     {
-      //  GameObject testShit = Instantiate(testPrefab, gameObject.transform);
-       // Destroy(testShit, 1);
-
         lShooting = false;
 
         if (!player.wallSliding)
@@ -623,7 +620,7 @@ public class PlayerWeaponSystem : MonoBehaviour {
         }
 
         //Camshake
-        StartCoroutine(camShake.VirutalCameraShake(5, .1f));
+        StartCoroutine(camShake.VirutalCameraShake(10, .25f));
 
         if (!player.grounded)
             airKickBack.KickBack();

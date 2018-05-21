@@ -35,8 +35,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4739102203780610}
-  - component: {fileID: 61358048614268620}
   - component: {fileID: 114731503674880376}
+  - component: {fileID: 60459467692700602}
   m_Layer: 12
   m_Name: SpikeTrap3x3
   m_TagString: SpikeTrap
@@ -121,8 +121,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1487450943476230}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.81, y: -6.747, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: 1, w: 0}
+  m_LocalPosition: {x: 10.113426, y: 1.3306761, z: 0.31056947}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4089191938097902}
@@ -130,9 +130,9 @@ Transform:
   - {fileID: 4683462984438962}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &61358048614268620
-BoxCollider2D:
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
+--- !u!60 &60459467692700602
+PolygonCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -143,7 +143,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.013832808, y: -0.3216138}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -153,9 +153,16 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.91700315, y: 0.35677242}
-  m_EdgeRadius: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0.29514885, y: -0.15944743}
+      - {x: 0.1333046, y: -0.43803287}
+      - {x: -0.013841629, y: -0.1632278}
+      - {x: -0.18341255, y: -0.4417169}
+      - {x: -0.3482647, y: -0.17126632}
+      - {x: -0.5155792, y: -0.50050426}
+      - {x: 0.46614456, y: -0.49809432}
+      - {x: 0.39408684, y: -0.35475707}
 --- !u!114 &114731503674880376
 MonoBehaviour:
   m_ObjectHideFlags: 1
