@@ -21,6 +21,7 @@ TagManager:
   - LevelManager
   - CountdownText
   - PlayerCollider
+  - MovingPlatform
   layers:
   - Default
   - TransparentFX

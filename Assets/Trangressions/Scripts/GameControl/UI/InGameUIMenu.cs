@@ -123,4 +123,9 @@ public class InGameUIMenu : MonoBehaviour {
     {
         countDownUI.SetActive(false);
     }
+
+    public void Quit()
+    {
+        SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
+    }
 }

@@ -12,6 +12,8 @@ public class PlayerAnimHandler : MonoBehaviour {
     public RArmAnimHandler rArmAnim;
     public LArmAnimHandler lArmAnim;
 
+    float noDustFX;
+
     [FMODUnity.EventRef]
     public string footstepAudio;
 
@@ -24,6 +26,7 @@ public class PlayerAnimHandler : MonoBehaviour {
 
         rArmAnim = transform.GetChild(2).GetComponent<RArmAnimHandler>();
         lArmAnim = transform.GetChild(3).GetComponent<LArmAnimHandler>();
+        noDustFX = 0.1f;
     }
 
     private void Update()
@@ -54,14 +57,18 @@ public class PlayerAnimHandler : MonoBehaviour {
             
             if (player.velocity.x < 0 && player.dir == Player.Direction.Right)
             {
-                //print(wSystem.inAirShooting);
-                Flip(false);
+                if (wSystem.wState == PlayerWeaponSystem.WeaponState.FullAim && controller.state == Controller2D.pState.Sliding && !player.hasHorInput)
+                    return;
+                else
+                    Flip(false);
             }
 
             if (player.velocity.x > 0 && player.dir == Player.Direction.Left)
             {
-                Flip(false);
-                //print(player.state);
+                if (wSystem.wState == PlayerWeaponSystem.WeaponState.FullAim && controller.state == Controller2D.pState.Sliding && !player.hasHorInput)
+                    return;
+                else
+                    Flip(false);
             }
             
         }
@@ -70,6 +77,9 @@ public class PlayerAnimHandler : MonoBehaviour {
         {
             print("This shit equal null");
         }
+
+        if (!GameController.gc.firstRun)
+            noDustFX -= Time.deltaTime;
         
     }
 
@@ -95,7 +105,7 @@ public class PlayerAnimHandler : MonoBehaviour {
             }
         }
         
-        //print("Player flip" + " were children not flipped?" + dontFlipChildren);
+        print("Player flip");
     }
 
     public void ResetAllAnimParams()
@@ -119,12 +129,16 @@ public class PlayerAnimHandler : MonoBehaviour {
 
     public IEnumerator DustLandFX()
     {
-        GameObject dustFX = ObjectPooler.sharedInstance.GetPooledObject("DustCloud");
-        dustFX.SetActive(true);
-        dustFX.transform.position = new Vector3(transform.position.x, transform.position.y - 0.99f, 0);
-        dustFX.transform.eulerAngles = new Vector3(-90, 0, 0);
-        yield return new WaitForSeconds(2f);
-        dustFX.SetActive(false);
+        if (noDustFX <= 0)
+        {
+            print(noDustFX);
+            GameObject dustFX = ObjectPooler.sharedInstance.GetPooledObject("DustCloud");
+            dustFX.SetActive(true);
+            dustFX.transform.position = new Vector3(transform.position.x, transform.position.y - 0.99f, 0);
+            dustFX.transform.eulerAngles = new Vector3(-90, 0, 0);
+            yield return new WaitForSeconds(2f);
+            dustFX.SetActive(false);
+        }
     }
 
     public IEnumerator WallDustFX(int wallDirX)

@@ -22,4 +22,13 @@ EditorBuildSettings:
     guid: 624723ef047dd8f4c96031d837b21240
   - enabled: 1
     path: Assets/Scenes/Sections/Section2/2-a.unity
+    guid: ee10fc4059522764e993e67694129017
+  - enabled: 1
+    path: Assets/Scenes/Sections/Section2/2-b.unity
+    guid: 6e6c748058012e3488ccc2c28d2810b0
+  - enabled: 1
+    path: Assets/Scenes/Sections/Section2/2-c.unity
     guid: cb874d4a56c3de24f973dfc016a41924
+  - enabled: 1
+    path: Assets/Scenes/Sections/Section2/2-d.unity
+    guid: eeb8f5bfbad499c478dd90d69f6c31d4

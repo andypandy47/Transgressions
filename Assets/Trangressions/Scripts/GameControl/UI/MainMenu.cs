@@ -48,6 +48,7 @@ public class MainMenu : MonoBehaviour {
         else if (screen == CurrentScreen.MissionSelect)
         {
             missionSelectScreen.SetActive(false);
+            mainMenu.SetActive(true);
             screen = CurrentScreen.MainMenu;
         }
 

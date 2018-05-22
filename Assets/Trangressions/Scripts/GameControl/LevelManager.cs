@@ -39,6 +39,7 @@ public class LevelManager : MonoBehaviour {
 
     private void Start()
     {
+        print("LManager Start");
         if (GameController.gc.firstRun)
         {
             print("First run");

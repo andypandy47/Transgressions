@@ -9,7 +9,7 @@ public class PlatformManager : MonoBehaviour {
 
     private void Start()
     {
-        platformObjects = GameObject.FindGameObjectsWithTag("Platform");
+        platformObjects = GameObject.FindGameObjectsWithTag("MovingPlatform");
         platforms = new PlatformController[platformObjects.Length];
 
         for (int i = 0; i < platformObjects.Length; i++)

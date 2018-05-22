@@ -44,6 +44,7 @@ public class BloodEffectsController : MonoBehaviour {
         }
 
         effect.transform.position = enemy.bloodPos.position;
+        effect.transform.parent = null;
         pSystem.transform.position = enemy.transform.position;
         activeBloodSprites.Add(effect);
         Destroy(pSystem, 1);
