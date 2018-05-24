@@ -105,7 +105,6 @@ public class PlayerAnimHandler : MonoBehaviour {
             }
         }
         
-        print("Player flip");
     }
 
     public void ResetAllAnimParams()
@@ -131,7 +130,6 @@ public class PlayerAnimHandler : MonoBehaviour {
     {
         if (noDustFX <= 0)
         {
-            print(noDustFX);
             GameObject dustFX = ObjectPooler.sharedInstance.GetPooledObject("DustCloud");
             dustFX.SetActive(true);
             dustFX.transform.position = new Vector3(transform.position.x, transform.position.y - 0.99f, 0);
