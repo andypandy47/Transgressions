@@ -19,14 +19,22 @@ public class Turret : MonoBehaviour {
     public Transform firePoint;
     public float idleAngle;
     public Vector2 angleClamp;
+    public LayerMask whatToDetect;
+    public LayerMask whatToHit;
 
     [HideInInspector]
-    public bool canFire, targetInRange, targetInSight;
+    public bool canFire, targetInRange, targetInSight, targetBehindWall;
     private Quaternion goalDir;
 
-    float refFloat;
+    [HideInInspector]
+    public Vector3 dir;
 
-    public void Start()
+    float refFloat;
+    float timeToUpdate = 0;
+    float tRange;
+    float distanceToTarget;
+
+    public virtual void Start()
     {
         target = GameObject.FindGameObjectWithTag("Player").transform;
         firePoint = transform.GetChild(0).transform;
@@ -34,9 +42,10 @@ public class Turret : MonoBehaviour {
         timeToFire = fireRate;
         timeToReturnToNormalPos = aggroTime;
         targetInSight = true;
+        tRange = 9999;
     }
 
-    public void Update()
+    public virtual void Update()
     {
         if (target == null)
         {
@@ -56,29 +65,8 @@ public class Turret : MonoBehaviour {
             return;
         }
 
-        //Get player direction
-        Vector3 dir = target.position - transform.position;
-        angleToTarget = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        angleToTarget = AngleClamp(angleToTarget, angleClamp.x, angleClamp.y);
-
-        //If target is within the turret bounds
-        if (targetInSight)
-        {
-            angle = angleToTarget;
-        }
-        else
-        {
-            angle = idleAngle;
-        }
-        
-
-
-        //Desired lerp angle
-        goalDir = Quaternion.AngleAxis(angle, Vector3.forward);
-
-
         //Check target is in range
-        float distanceToTarget = Vector3.Distance(firePoint.position, target.position);
+        distanceToTarget = Vector3.Distance(firePoint.position, target.position);
         if (distanceToTarget > range || !targetInSight)
         {
             targetInRange = false;
@@ -86,12 +74,66 @@ public class Turret : MonoBehaviour {
         else
             targetInRange = true;
 
+        //Get player direction
+        dir = target.position - transform.position;
+        angleToTarget = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+
+        CheckPlayerNotBehindWall(dir, distanceToTarget, .3f);
+        angleToTarget = AngleClamp(angleToTarget, angleClamp.x, angleClamp.y);
+
+        //If target is within the turret bounds
+        if (targetInSight && targetInRange)
+        {
+            //angle to rotate to = angle to the player
+            angle = angleToTarget;
+        }
+        else
+        {
+            //else angle to rotate to = idleangle
+            angle = idleAngle;
+        }
+        
+        //Desired lerp angle
+        goalDir = Quaternion.AngleAxis(angle, Vector3.forward);
+
         //Rotate accordingly
         transform.rotation = Quaternion.Lerp(transform.rotation, goalDir, Time.deltaTime);
         
 
     }
 
+    bool CheckPlayerNotBehindWall(Vector3 dir, float distance, float updateRate)
+    {
+        timeToUpdate -= Time.deltaTime;
+        if (timeToUpdate < 0)
+        {
+            RaycastHit2D hit = Physics2D.Raycast(firePoint.position, dir, distance, whatToDetect);
+
+            if (hit)
+            {
+                if (hit.collider.tag == "Player")
+                {
+                    targetBehindWall = false;
+                    //tRange = hit.distance;
+                    //print("Player is visible, fire");
+                }
+                else if (hit.collider.tag == "Floor")
+                {
+                    targetBehindWall = true;
+                    //tRange = hit.distance;
+                    print("Player is behind wall, dont fire");
+                }
+            }
+
+            timeToUpdate = updateRate;
+        }
+        
+        //Debug.DrawRay(firePoint.position, dir, Color.green);
+        return targetBehindWall;
+
+    }
+
+    //Function clamps angle but also checks if player is out of angle bounds e.g not behind turret wall
     float AngleClamp(float angle, float min, float max)
     {
         if (angle <= min || angle >= max)
@@ -109,14 +151,15 @@ public class Turret : MonoBehaviour {
         }
         else
         {
-            //print("In turret sight");
             timeToReturnToNormalPos = aggroTime;
-            targetInSight = true;
+            //player is within angle bounds
+            if (!targetBehindWall)
+                targetInSight = true;
+            else
+                targetInSight = false;
         }
 
         return angle;
-        
-
     }
 
     void CoolDownTime()
