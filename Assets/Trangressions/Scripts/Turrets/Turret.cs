@@ -8,6 +8,7 @@ public class Turret : MonoBehaviour {
     public float fireRate;
     public float timeToFire;
     public float range;
+    [Range (0.5f, 5) ]
     public float turnSpeed;
     public float aggroTime;
     float timeToReturnToNormalPos;
@@ -97,7 +98,7 @@ public class Turret : MonoBehaviour {
         goalDir = Quaternion.AngleAxis(angle, Vector3.forward);
 
         //Rotate accordingly
-        transform.rotation = Quaternion.Lerp(transform.rotation, goalDir, Time.deltaTime);
+        transform.rotation = Quaternion.Lerp(transform.rotation, goalDir, Time.deltaTime * turnSpeed);
         
 
     }
@@ -151,7 +152,7 @@ public class Turret : MonoBehaviour {
         }
         else
         {
-            timeToReturnToNormalPos = aggroTime;
+            //timeToReturnToNormalPos = aggroTime;
             //player is within angle bounds
             if (!targetBehindWall)
                 targetInSight = true;

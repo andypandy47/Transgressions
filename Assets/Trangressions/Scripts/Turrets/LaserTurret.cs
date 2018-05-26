@@ -42,7 +42,7 @@ public class LaserTurret : Turret {
 
     void Shoot()
     {
-        RaycastHit2D hit = Physics2D.Raycast(firePoint.position, Vector3.down * transform.rotation.z, range, whatToHit);
+        RaycastHit2D hit = Physics2D.Raycast(firePoint.position, shootDir,  range * rangeCompensation, whatToHit);
         if (hit)
         {
             if (hit.collider.tag == "player")

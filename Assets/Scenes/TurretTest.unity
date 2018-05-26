@@ -183,6 +183,11 @@ Prefab:
       propertyPath: rangeCompensation
       value: 2.629
       objectReference: {fileID: 0}
+    - target: {fileID: 114769054121130046, guid: 0f3c1e58fa7888148b9af513bf9bfc9f,
+        type: 2}
+      propertyPath: turnSpeed
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 61839813659846566, guid: 0f3c1e58fa7888148b9af513bf9bfc9f, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 0f3c1e58fa7888148b9af513bf9bfc9f, type: 2}
