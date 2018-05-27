@@ -60,10 +60,6 @@ public class Player : MonoBehaviour
     bool canLand, canWallSlide;
     int wallDirX;
 
-    GameObject rArm, lArm;
-    Vector3 normalRightArmPos = new Vector3(0.311f, -0.277f, 0), normalLeftArmPos = new Vector3(0.186f, -0.261f, 0);
-    Vector3 altRightArmPos = new Vector3(0.22f, -0.214f, 0), altLeftArmPos = new Vector3(0.15f, -0.352f, 0);
-
     public float test;
 
     void Start()
@@ -72,9 +68,6 @@ public class Player : MonoBehaviour
         wSystem = GetComponent<PlayerWeaponSystem>();
         pAnimHandler = GetComponent<PlayerAnimHandler>();
         moveIncrease = GetComponent<PlayerMovementIncrease>();
-
-        rArm = transform.GetChild(2).gameObject;
-        lArm = transform.GetChild(3).gameObject;
 
         dir = Direction.Right;
        // state = pState.Stationary;

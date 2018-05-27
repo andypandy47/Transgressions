@@ -6,11 +6,16 @@ public class LaserTurret : Turret {
 
     Animator anim;
     LineRenderer lineR;
-    GameObject reticule;
+    ReticuleFollow rFollow;
+
+    Transform reticule;
+    Vector3 reticuleIdle = new Vector3(5, 0, 0);
     GameObject shootDirection;
 
     Vector3 shootDir;
     const float rangeCompensation = 2.629f;
+
+    bool locked;
 
     public override void Start()
     {
@@ -18,40 +23,51 @@ public class LaserTurret : Turret {
 
         anim = GetComponent<Animator>();
         lineR = GetComponent<LineRenderer>();
+        rFollow = GetComponent<ReticuleFollow>();
 
-        reticule = transform.GetChild(1).gameObject;
+        reticule = transform.GetChild(1).transform;
         shootDirection = transform.GetChild(2).gameObject;
+
+        locked = false;
     }
 
     public override void Update()
     {
         base.Update();
+
+        RotateTurret(reticule);
+
+        if (timeToFire < .5f)
+            locked = true;
+
         AnimatorBools();
 
         shootDir = firePoint.position - transform.position;
 
-        ReticuleControl();
+        if (playerInSight && playerInRange)
+            rFollow.MoveReticule(player, .2f, locked);
+
         if (canFire)
         {
             print("Laser turret fired");
             Shoot();
         }
         Debug.DrawRay(firePoint.position, (shootDir * range) * rangeCompensation, Color.white);
-        //print(firePoint.position);
     }
 
     void Shoot()
     {
-        RaycastHit2D hit = Physics2D.Raycast(firePoint.position, shootDir,  range * rangeCompensation, whatToHit);
+        RaycastHit2D hit = Physics2D.Raycast(firePoint.position, shootDir, Mathf.Infinity, whatToHit);
+        
         if (hit)
         {
-            if (hit.collider.tag == "player")
+            if (hit.collider.tag == "PlayerCollider")
             {
                 print("Player hit by laser");
             }
         }
         
-        ResetTurret();
+        ResetFiring();
     }
 
     void AnimatorBools()
@@ -66,6 +82,13 @@ public class LaserTurret : Turret {
             anim.SetBool("charging", false);
         }
 
+    }
+
+    void ResetFiring()
+    {
+        timeToFire = fireRate;
+        canFire = false;
+        locked = false;
     }
 
     void ReticuleControl()

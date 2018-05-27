@@ -14,9 +14,10 @@ public class Turret : MonoBehaviour {
     float timeToReturnToNormalPos;
     float angle;
     float angleToTarget;
+    float angleToPlayer;
 
     [Header("Unity Setup")]
-    private Transform target;
+    [HideInInspector]public Transform player;
     public Transform firePoint;
     public float idleAngle;
     public Vector2 angleClamp;
@@ -24,41 +25,59 @@ public class Turret : MonoBehaviour {
     public LayerMask whatToHit;
 
     [HideInInspector]
-    public bool canFire, targetInRange, targetInSight, targetBehindWall;
+    public bool canFire, playerInRange, playerInSight, playerBehindWall;
     private Quaternion goalDir;
 
     [HideInInspector]
-    public Vector3 dir;
+    public Vector3 dirToTarget, dirToPlayer;
 
     float refFloat;
     float timeToUpdate = 0;
     float tRange;
-    float distanceToTarget;
+    float distanceToPlayer;
 
     public virtual void Start()
     {
-        target = GameObject.FindGameObjectWithTag("Player").transform;
+        player = GameObject.FindGameObjectWithTag("Player").transform;
         firePoint = transform.GetChild(0).transform;
 
         timeToFire = fireRate;
         timeToReturnToNormalPos = aggroTime;
-        targetInSight = true;
+        playerInSight = true;
         tRange = 9999;
     }
 
     public virtual void Update()
     {
-        if (target == null)
+        if (player == null)
         {
             print("target is null");
             return;
         }
 
-        LookAtTarget();
+        CheckForAgrro();
         CoolDownTime();
     }
 
-    void LookAtTarget()
+    void CheckForAgrro()
+    {
+        //Check target is in range
+        distanceToPlayer = Vector3.Distance(firePoint.position, player.position);
+        if (distanceToPlayer > range || !playerInSight)
+        {
+            playerInRange = false;
+        }
+        else
+            playerInRange = true;
+
+        dirToPlayer = player.position - transform.position;
+        angleToPlayer = Mathf.Atan2(dirToPlayer.y, dirToPlayer.x) * Mathf.Deg2Rad;
+
+        CheckPlayerNotBehindWall(dirToPlayer, distanceToPlayer, .3f);
+        CheckPlayerWithinAngleBounds(angleToPlayer, angleClamp.x, angleClamp.y);
+    }
+
+    public void RotateTurret(Transform target)
     {
         if (target == null)
         {
@@ -66,24 +85,14 @@ public class Turret : MonoBehaviour {
             return;
         }
 
-        //Check target is in range
-        distanceToTarget = Vector3.Distance(firePoint.position, target.position);
-        if (distanceToTarget > range || !targetInSight)
-        {
-            targetInRange = false;
-        }
-        else
-            targetInRange = true;
-
         //Get player direction
-        dir = target.position - transform.position;
-        angleToTarget = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        dirToTarget = target.position - transform.position;
+        angleToTarget = Mathf.Atan2(dirToTarget.y, dirToTarget.x) * Mathf.Rad2Deg;
 
-        CheckPlayerNotBehindWall(dir, distanceToTarget, .3f);
         angleToTarget = AngleClamp(angleToTarget, angleClamp.x, angleClamp.y);
 
         //If target is within the turret bounds
-        if (targetInSight && targetInRange)
+        if (playerInSight && playerInRange)
         {
             //angle to rotate to = angle to the player
             angle = angleToTarget;
@@ -109,20 +118,21 @@ public class Turret : MonoBehaviour {
         if (timeToUpdate < 0)
         {
             RaycastHit2D hit = Physics2D.Raycast(firePoint.position, dir, distance, whatToDetect);
+            Debug.DrawRay(firePoint.position, dir * distance, Color.blue);
 
             if (hit)
             {
-                if (hit.collider.tag == "Player")
+                if (hit.collider.tag == "PlayerCollider")
                 {
-                    targetBehindWall = false;
+                    playerBehindWall = false;
                     //tRange = hit.distance;
-                    //print("Player is visible, fire");
+                    //print("Player is visible, follow");
                 }
                 else if (hit.collider.tag == "Floor")
                 {
-                    targetBehindWall = true;
+                    playerBehindWall = true;
                     //tRange = hit.distance;
-                    print("Player is behind wall, dont fire");
+                    //print("Player is behind wall, dont fire");
                 }
             }
 
@@ -130,7 +140,7 @@ public class Turret : MonoBehaviour {
         }
         
         //Debug.DrawRay(firePoint.position, dir, Color.green);
-        return targetBehindWall;
+        return playerBehindWall;
 
     }
 
@@ -139,8 +149,6 @@ public class Turret : MonoBehaviour {
     {
         if (angle <= min || angle >= max)
         {
-            targetInSight = false;
-
             if (angle <= min)
             {
                 angle = min;
@@ -150,40 +158,54 @@ public class Turret : MonoBehaviour {
                 angle = max;
             }
         }
-        else
-        {
-            //timeToReturnToNormalPos = aggroTime;
-            //player is within angle bounds
-            if (!targetBehindWall)
-                targetInSight = true;
-            else
-                targetInSight = false;
-        }
 
         return angle;
+    }
+
+    bool CheckPlayerWithinAngleBounds(float angle, float min, float max)
+    {
+        if (angle <= min || angle >= max)
+        {
+            if (angle <= min)
+            {
+                angle = min;
+            }
+            if (angle >= max)
+            {
+                angle = max;
+            }
+            playerInSight = false;
+            //print("player is not in sight");
+        }
+        else
+        {
+            if (!playerBehindWall)
+            {
+                playerInSight = true;
+                //print("player is in sight, follow");
+            }
+            else
+                playerInSight = false;
+        }
+
+        return playerInSight;
     }
 
     void CoolDownTime()
     {
         //If turret cannot fire and target is in range and target is in sight
-        if (!canFire && targetInRange && targetInSight)
+        if (!canFire && playerInRange && playerInSight)
         {
             //Reduce time until it can fire next
             timeToFire -= Time.deltaTime;
             if (timeToFire <= 0)
                 canFire = true;
         }
-        else if (!targetInRange || !targetInSight)
+        else if (!playerInRange || !playerInSight)
         {
             timeToFire = fireRate;
             canFire = false;
         }
-    }
-
-    public void ResetTurret()
-    {
-        canFire = false;
-        timeToFire = fireRate;
     }
 
     private void OnDrawGizmos()

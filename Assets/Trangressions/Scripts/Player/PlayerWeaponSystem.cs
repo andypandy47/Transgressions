@@ -36,10 +36,10 @@ public class PlayerWeaponSystem : MonoBehaviour {
     [HideInInspector] public Transform RArm, LArm, muzzlePoint, muzzlePointSplit;
     GameObject muzzleFlashPrefab;
 
-    [HideInInspector]
-    public Vector3 splitShootLeftArmPos = new Vector3(-.302f, -0.278f, 0), normalLeftArmPos = new Vector3(0.186f, -0.261f, 0),
-        rightArmJumpShootPos = new Vector3(0.178f, -0.331f, 0), leftArmJumpShootPos = new Vector3(0.157f, -0.356f, 0),
-        normalRightPos = new Vector3(0.311f, -0.277f, 0);
+    //[HideInInspector]
+    public Vector3 splitShootLeftArmPos = new Vector3(-.302f, -0.278f, 0), normalLeftArmPos = new Vector3(0.186f, -0.067f, 0),
+        rightArmJumpShootPos = new Vector3(0.217f, -0.095f, 0), leftArmJumpShootPos = new Vector3(0.157f, -0.136f, 0),
+        normalRightArmPos = new Vector3(0.311f, -0.041f, 0);
     Vector3 pScale;
 
     // public RaycastHit2D lHit;
@@ -116,10 +116,16 @@ public class PlayerWeaponSystem : MonoBehaviour {
 
         if (player.grounded && wState != WeaponState.SplitAim)
         {
-            RArm.gameObject.transform.localPosition = normalRightPos;
-            LArm.gameObject.transform.localPosition = normalLeftArmPos;
+            RArm.localPosition = normalRightArmPos;
+            LArm.localPosition = normalLeftArmPos;
         }
 
+    }
+
+    private void LateUpdate()
+    {
+        //RArm.localPosition = normalRightPos;
+        //print(RArm.localPosition);
     }
 
     public void RightWeaponInput()
@@ -275,8 +281,8 @@ public class PlayerWeaponSystem : MonoBehaviour {
                         wState = WeaponState.FullAim;
                         LeftShoot(false, false);
                     }
-                    RArm.gameObject.transform.localPosition = rightArmJumpShootPos;
-                    LArm.gameObject.transform.localPosition = leftArmJumpShootPos;
+                    RArm.localPosition = rightArmJumpShootPos;
+                    LArm.localPosition = leftArmJumpShootPos;
                 }
                 else if (wState == WeaponState.FullAim && player.dir == Player.Direction.Right)
                 {
@@ -442,8 +448,8 @@ public class PlayerWeaponSystem : MonoBehaviour {
                         LeftShoot(false, false);
                     }
 
-                    RArm.gameObject.transform.localPosition = rightArmJumpShootPos;
-                    LArm.gameObject.transform.localPosition = leftArmJumpShootPos;
+                    RArm.localPosition = rightArmJumpShootPos;
+                    LArm.localPosition = leftArmJumpShootPos;
                 }
                 else if (wState == WeaponState.FullAim && player.dir == Player.Direction.Left)
                 {
