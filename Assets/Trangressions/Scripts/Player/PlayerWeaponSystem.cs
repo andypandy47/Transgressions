@@ -8,7 +8,7 @@ public class PlayerWeaponSystem : MonoBehaviour {
     Player player;
     PlayerAnimHandler pAnimHandler;
     AirKickBack airKickBack;
-    CamShake camShake;
+    //CamShake camShake;
 
     public GameObject testPrefab;
 
@@ -58,7 +58,7 @@ public class PlayerWeaponSystem : MonoBehaviour {
         pAnimHandler = GetComponent<PlayerAnimHandler>();
         airKickBack = GetComponent<AirKickBack>();
         controller = GetComponent<Controller2D>();
-        camShake = GameObject.FindGameObjectWithTag("LevelManager").GetComponent<CamShake>();
+        //camShake = GameObject.FindGameObjectWithTag("LevelManager").GetComponent<CamShake>();
 
         muzzlePoint = transform.GetChild(0).transform;
         muzzlePointSplit = transform.GetChild(1).transform;
@@ -626,7 +626,7 @@ public class PlayerWeaponSystem : MonoBehaviour {
         }
 
         //Camshake
-        StartCoroutine(camShake.VirutalCameraShake(10, .25f));
+        StartCoroutine(CamShake.instance.VirutalCameraShake(10, .25f));
 
         if (!player.grounded)
             airKickBack.KickBack();

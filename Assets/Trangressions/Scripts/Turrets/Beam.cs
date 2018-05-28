@@ -4,13 +4,64 @@ using UnityEngine;
 
 public class Beam : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    float offSet;
+    Color transparent = new Color(0, 0, 0, 0);
+
+	public IEnumerator ShootLaser(Transform player, LineRenderer lineRend, Vector3 shootDir, Vector3 firePoint, float length, float duration,
+        LayerMask unitMask, LayerMask wallMask, bool reset)
+    {
+        RaycastHit2D wallHit = Physics2D.Raycast(firePoint, shootDir, Mathf.Infinity, wallMask);
+
+        lineRend.material.SetColor("_Color", Color.white);
+        lineRend.SetPosition(0, firePoint);
+        lineRend.SetPosition(1, wallHit.point);
+
+        StartCoroutine(CamShake.instance.VirutalCameraShake(10, .5f));
+
+        float timer = 0.0f;
+        while (timer < duration && !reset)
+        {
+            RaycastHit2D unitHit = Physics2D.Raycast(firePoint, shootDir, Mathf.Infinity, unitMask);
+            if (unitHit)
+            {
+                if (unitHit.collider.tag == "PlayerCollider")
+                {
+                    print("Player hit by laser");
+                }
+                else if (unitHit.collider.tag == "Enemy")
+                {
+                    print("Enemy hit by laser");
+                }
+            }
+
+            offSet += Time.deltaTime;
+            lineRend.material.SetTextureOffset("_MainTex", new Vector2(offSet, 0));
+
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        StartCoroutine(FadeLaser(lineRend, firePoint));
+        
+    }
+
+    IEnumerator FadeLaser(LineRenderer lineRend, Vector3 firePoint)
+    {
+        for (float f = 1f; f > 0; f -= 0.1f)
+        {
+            Color c = lineRend.material.color;
+            c.a = f;
+            lineRend.material.SetColor("_Color", c);
+            yield return new WaitForSeconds(0.03f);
+        }
+        lineRend.SetPosition(1, firePoint);
+        lineRend.material.SetColor("_Color", transparent);
+    }
+
+    public void ResetBeam(LineRenderer lineRend, Vector3 firePoint)
+    {
+        print("Reset beam");
+        lineRend.SetPosition(1, firePoint);
+        lineRend.material.SetColor("_Color", transparent);
+    }
 }

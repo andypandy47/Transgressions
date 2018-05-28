@@ -11,6 +11,7 @@ public class LevelManager : MonoBehaviour {
     BloodEffectsController bEffects;
     InGameUIMenu UIMenus;
     PlatformManager pManager;
+    TurretManager tManager;
     ScoreCalculator sCalc;
     PauseMenu pMenu;
 
@@ -33,6 +34,7 @@ public class LevelManager : MonoBehaviour {
         wc = GetComponent<WinConditions>();
         bEffects = GetComponent<BloodEffectsController>();
         pManager = GetComponent<PlatformManager>();
+        tManager = GetComponent<TurretManager>();
         sCalc = GetComponent<ScoreCalculator>();
         
     }
@@ -83,6 +85,7 @@ public class LevelManager : MonoBehaviour {
         bEffects.ResetSprites();
         player.ResetToSpawnPosition(spawnPoint);
         pManager.ResetAllPlatforms();
+        tManager.ResetTurrets();
         sCalc.ResetScore();
         ObjectPooler.sharedInstance.DeactivatePooledObjects();
 

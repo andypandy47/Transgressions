@@ -8,12 +8,12 @@ public class Turret : MonoBehaviour {
     public float fireRate;
     public float timeToFire;
     public float range;
-    [Range (0.5f, 5) ]
+    [Range (0.5f, 20) ]
     public float turnSpeed;
     public float aggroTime;
     float timeToReturnToNormalPos;
-    float angle;
-    float angleToTarget;
+    [HideInInspector]
+    public float angle, angleToTarget;
     float angleToPlayer;
 
     [Header("Unity Setup")]
@@ -25,8 +25,7 @@ public class Turret : MonoBehaviour {
     public LayerMask whatToHit;
 
     [HideInInspector]
-    public bool canFire, playerInRange, playerInSight, playerBehindWall;
-    private Quaternion goalDir;
+    public bool canFire, firing, playerInRange, playerInSight, playerBehindWall, reset;
 
     [HideInInspector]
     public Vector3 dirToTarget, dirToPlayer;
@@ -77,40 +76,7 @@ public class Turret : MonoBehaviour {
         CheckPlayerWithinAngleBounds(angleToPlayer, angleClamp.x, angleClamp.y);
     }
 
-    public void RotateTurret(Transform target)
-    {
-        if (target == null)
-        {
-            print("target is null");
-            return;
-        }
-
-        //Get player direction
-        dirToTarget = target.position - transform.position;
-        angleToTarget = Mathf.Atan2(dirToTarget.y, dirToTarget.x) * Mathf.Rad2Deg;
-
-        angleToTarget = AngleClamp(angleToTarget, angleClamp.x, angleClamp.y);
-
-        //If target is within the turret bounds
-        if (playerInSight && playerInRange)
-        {
-            //angle to rotate to = angle to the player
-            angle = angleToTarget;
-        }
-        else
-        {
-            //else angle to rotate to = idleangle
-            angle = idleAngle;
-        }
-        
-        //Desired lerp angle
-        goalDir = Quaternion.AngleAxis(angle, Vector3.forward);
-
-        //Rotate accordingly
-        transform.rotation = Quaternion.Lerp(transform.rotation, goalDir, Time.deltaTime * turnSpeed);
-        
-
-    }
+    
 
     bool CheckPlayerNotBehindWall(Vector3 dir, float distance, float updateRate)
     {
@@ -144,8 +110,8 @@ public class Turret : MonoBehaviour {
 
     }
 
-    //Function clamps angle but also checks if player is out of angle bounds e.g not behind turret wall
-    float AngleClamp(float angle, float min, float max)
+    //Function clamps angle
+    public float AngleClamp(float angle, float min, float max)
     {
         if (angle <= min || angle >= max)
         {
@@ -194,7 +160,7 @@ public class Turret : MonoBehaviour {
     void CoolDownTime()
     {
         //If turret cannot fire and target is in range and target is in sight
-        if (!canFire && playerInRange && playerInSight)
+        if (!canFire && playerInRange && playerInSight && !firing)
         {
             //Reduce time until it can fire next
             timeToFire -= Time.deltaTime;
@@ -206,6 +172,12 @@ public class Turret : MonoBehaviour {
             timeToFire = fireRate;
             canFire = false;
         }
+    }
+
+    public void ResetTurret()
+    {
+        reset = true;
+        transform.rotation = Quaternion.Euler(0, 0, idleAngle);
     }
 
     private void OnDrawGizmos()

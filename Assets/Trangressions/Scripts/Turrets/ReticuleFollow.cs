@@ -10,12 +10,14 @@ public class ReticuleFollow : MonoBehaviour {
 
     Vector3 refVector;
     Vector3 currentPosition;
+    Vector3 startPos;
 
     private void Start()
     {
         turret = GetComponent<LaserTurret>();
 
         reticule = transform.GetChild(1).transform;
+        startPos = transform.position;
     }
 
     public void MoveReticule(Transform target, float reticuleSmoothTime, bool locked)
@@ -30,7 +32,10 @@ public class ReticuleFollow : MonoBehaviour {
             reticule.position = currentPosition;
         }
         
-        
-            
+    }
+
+    public void ResetReticule()
+    {
+        reticule.position = startPos;
     }
 }
