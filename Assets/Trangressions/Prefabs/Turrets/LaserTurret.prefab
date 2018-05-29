@@ -114,7 +114,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1974115935740164}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.22, y: -0, z: 0}
+  m_LocalPosition: {x: 1, y: -0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4130131304643770}
@@ -183,11 +183,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9e4171835088924ab755f3daadb5653, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fireRate: 4
+  fireRate: 3
   timeToFire: 0
   range: 10
-  turnSpeed: 5
+  turnSpeed: 11
   aggroTime: 1
+  angle: 0
+  angleToTarget: 0
   player: {fileID: 0}
   firePoint: {fileID: 4542274716901544}
   idleAngle: -90
@@ -199,13 +201,15 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 11008
   canFire: 0
+  firing: 0
   playerInRange: 0
   playerInSight: 0
   playerBehindWall: 0
+  reset: 0
   dirToTarget: {x: 0, y: 0, z: 0}
   dirToPlayer: {x: 0, y: 0, z: 0}
   laserLength: 5
-  laserDuration: 5
+  laserDuration: 3
   unitMask:
     serializedVersion: 2
     m_Bits: 10240
@@ -284,7 +288,7 @@ LineRenderer:
       ctime7: 0
       atime0: 0
       atime1: 65535
-      atime2: 0
+      atime2: 65535
       atime3: 0
       atime4: 0
       atime5: 0
@@ -298,7 +302,7 @@ LineRenderer:
     alignment: 0
     textureMode: 1
     generateLightingData: 0
-  m_UseWorldSpace: 0
+  m_UseWorldSpace: 1
   m_Loop: 0
 --- !u!212 &212357603726479926
 SpriteRenderer:

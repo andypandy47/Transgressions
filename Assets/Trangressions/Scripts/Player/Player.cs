@@ -7,6 +7,8 @@ public class Player : MonoBehaviour
     PlayerWeaponSystem wSystem;
     PlayerAnimHandler pAnimHandler;
     PlayerMovementIncrease moveIncrease;
+    SpriteRenderer sRend;
+    CapsuleCollider2D hitCollider;
 
     public enum Direction
     {
@@ -68,6 +70,8 @@ public class Player : MonoBehaviour
         wSystem = GetComponent<PlayerWeaponSystem>();
         pAnimHandler = GetComponent<PlayerAnimHandler>();
         moveIncrease = GetComponent<PlayerMovementIncrease>();
+        sRend = GetComponent<SpriteRenderer>();
+        hitCollider = GetComponentInChildren<CapsuleCollider2D>();
 
         dir = Direction.Right;
        // state = pState.Stationary;
@@ -127,7 +131,10 @@ public class Player : MonoBehaviour
         SetBools();
         HandleDirectionLogic();
 
-        controller.Move(velocity * Time.deltaTime, directionalInput);
+        if (alive)
+            controller.Move(velocity * Time.deltaTime, directionalInput);
+        else
+            controller.Move(Vector2.zero, Vector2.zero);
 
         if (controller.collisions.above || controller.collisions.below)
         {
@@ -399,6 +406,8 @@ public class Player : MonoBehaviour
         wSystem.wState = PlayerWeaponSystem.WeaponState.NoAim;
         pAnimHandler.ResetAllAnimParams();
         controller.ResetVariables();
+        sRend.enabled = true;
+        hitCollider.enabled = true;
 
         reset = true;
 

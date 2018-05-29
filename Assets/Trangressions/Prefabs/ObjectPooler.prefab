@@ -87,6 +87,9 @@ MonoBehaviour:
   - objectToPool: {fileID: 1141195504547994, guid: 285c2dbc2f60b83449021cc6a8f44545,
       type: 2}
     amountToPool: 5
+  - objectToPool: {fileID: 1146726049556356, guid: c602be6d128fcde4780401dfad68f2c2,
+      type: 2}
+    amountToPool: 1
   pooledObjects: []
   splatter: {fileID: 1677868404810284, guid: c08cd246f3bb1c74a97263c1e7aae0bc, type: 2}
   amountToSplatterPool: 100

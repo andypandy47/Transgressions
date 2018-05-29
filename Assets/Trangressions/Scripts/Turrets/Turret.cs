@@ -26,6 +26,7 @@ public class Turret : MonoBehaviour {
 
     [HideInInspector]
     public bool canFire, firing, playerInRange, playerInSight, playerBehindWall, reset;
+    public bool activated;
 
     [HideInInspector]
     public Vector3 dirToTarget, dirToPlayer;
@@ -54,8 +55,12 @@ public class Turret : MonoBehaviour {
             return;
         }
 
-        CheckForAgrro();
-        CoolDownTime();
+        if (activated)
+        {
+            CheckForAgrro();
+            CoolDownTime();
+        }
+        
     }
 
     void CheckForAgrro()
@@ -177,6 +182,7 @@ public class Turret : MonoBehaviour {
     public void ResetTurret()
     {
         reset = true;
+        activated = false;
         transform.rotation = Quaternion.Euler(0, 0, idleAngle);
     }
 

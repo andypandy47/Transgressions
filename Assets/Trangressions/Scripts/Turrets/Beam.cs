@@ -26,7 +26,12 @@ public class Beam : MonoBehaviour {
             {
                 if (unitHit.collider.tag == "PlayerCollider")
                 {
-                    print("Player hit by laser");
+                    CapsuleCollider2D playerCollider = unitHit.collider.GetComponent<CapsuleCollider2D>();
+                    playerCollider.enabled = false;
+
+                    PlayerDeath pDeath = player.GetComponent<PlayerDeath>();
+                    StartCoroutine(pDeath.PlayerDead());
+                    StartCoroutine(CamShake.instance.VirutalCameraShake(10, .2f));
                 }
                 else if (unitHit.collider.tag == "Enemy")
                 {

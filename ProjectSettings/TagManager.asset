@@ -23,6 +23,7 @@ TagManager:
   - PlayerCollider
   - MovingPlatform
   - Turret
+  - PlayerDeathChunks
   layers:
   - Default
   - TransparentFX

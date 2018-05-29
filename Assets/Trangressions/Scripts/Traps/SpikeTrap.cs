@@ -15,8 +15,7 @@ public class SpikeTrap : MonoBehaviour {
     {
         if (collision.tag == "PlayerCollider")
         {
-            player.alive = false;
-            print("Player dead");
+            StartCoroutine(PlayerDeath.instance.PlayerDead());
         }
 
         if (collision)

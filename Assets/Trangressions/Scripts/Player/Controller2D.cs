@@ -73,8 +73,10 @@ public class Controller2D : RaycastController
 
     public void Move(Vector2 moveAmount, bool standingOnPlatform)
     {
-        if (!PauseMenu.isPaused)
+        if (!PauseMenu.isPaused && player.alive)
+        {
             Move(moveAmount, Vector2.zero, standingOnPlatform);
+        }
     }
 
     public void Move(Vector2 moveAmount, Vector2 input, bool standingOnPlatform = false)

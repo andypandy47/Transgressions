@@ -25,8 +25,19 @@ public class LaserTurret : Turret {
     public LayerMask unitMask;
     public LayerMask wallMask;
 
+    public enum State
+    {
+        Inactive,
+        Idle,
+        Charging,
+        Firing
+    }
+
+    public State state;
+    
     public override void Start()
     {
+        state = State.Inactive;
         base.Start();
 
         anim = GetComponent<Animator>();
@@ -44,27 +55,36 @@ public class LaserTurret : Turret {
     {
         base.Update();
 
-        RotateTurret(reticule);
-
-        if (timeToFire < .2f)
-            locked = true;
-
-        AnimatorBools();
-
-        shootDir = firePoint.position - transform.position;
-
-        if (playerInRange)
-            rFollow.MoveReticule(player, .1f, locked);
-
-        if (canFire)
+        if (activated && state == State.Inactive)
+            StartCoroutine(ActivateTurret());
+        
+        if (state != State.Inactive)
         {
-            print("Laser turret fired");
-            canFire = false;
-            firing = true;
-            StartCoroutine(Shoot());
-        }
-        Debug.DrawRay(firePoint.position, (shootDir * range) * rangeCompensation, Color.white);
+            RotateTurret(reticule);
 
+            if (timeToFire < .7f && !firing)
+            {
+                state = State.Charging;
+                if (timeToFire < .2f)
+                    locked = true;
+            }
+
+
+            shootDir = firePoint.position - transform.position;
+
+            if (playerInRange)
+                rFollow.MoveReticule(player, .1f, locked);
+
+            if (canFire)
+            {
+                canFire = false;
+                firing = true;
+                StartCoroutine(Shoot());
+            }
+
+            Debug.DrawRay(firePoint.position, (shootDir * range) * rangeCompensation, Color.white);
+        }
+        
         if (reset)
         {
             reset = false;
@@ -73,11 +93,18 @@ public class LaserTurret : Turret {
             
     }
 
+    IEnumerator ActivateTurret()
+    {
+        yield return new WaitForSeconds(0.1f);
+        state = State.Idle;
+    }
+
     IEnumerator Shoot()
     {
+        state = State.Firing;
+
         if (!reset)
             yield return StartCoroutine(laserBeam.ShootLaser(player, lineR, shootDir, firePoint.position, laserLength, laserDuration, unitMask, wallMask, reset));
-        print("Laser should stop now");
         
         ResetFiring();
         yield return false;
@@ -117,26 +144,13 @@ public class LaserTurret : Turret {
         transform.rotation = Quaternion.Lerp(transform.rotation, goalDir, Time.deltaTime * turnSpeed);
     }
 
-    void AnimatorBools()
-    {
-        anim.SetBool("canFire", canFire);
-        if (timeToFire < .5f)
-        {
-            anim.SetBool("charging", true);
-        }
-        else
-        {
-            anim.SetBool("charging", false);
-        }
-
-    }
-
     void ResetFiring()
     {
         print("Laser reset");
         timeToFire = fireRate;
         firing = false;
         locked = false;
+        state = State.Idle;
     }
 
     IEnumerator ResetThisTurret()
@@ -150,6 +164,7 @@ public class LaserTurret : Turret {
         firing = false;
         timeToFire = fireRate;
         reset = false;
+        state = State.Inactive;
         yield return null;
     }
 }

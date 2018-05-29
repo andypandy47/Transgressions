@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class LevelManager : MonoBehaviour {
 
     Player player;
+    PlayerDeath pDeath;
     LevelTimer lTime;
     WinConditions wc;
     BloodEffectsController bEffects;
@@ -28,6 +29,7 @@ public class LevelManager : MonoBehaviour {
         spawnPoint = GameObject.FindGameObjectWithTag("SpawnPoint").transform;
 
         player = playerObj.GetComponent<Player>();
+        pDeath = playerObj.GetComponent<PlayerDeath>();
         pMenu = UICanvas.GetComponent<PauseMenu>();
         UIMenus = UICanvas.GetComponent<InGameUIMenu>();
         lTime = GetComponent<LevelTimer>();
@@ -57,17 +59,22 @@ public class LevelManager : MonoBehaviour {
     private void Update()
     {
         if (!wc.playerLost)
-            CheckPlayerLost();
+            CheckPlayerHasntRunOutOfTime();
     }
 
-    public void CheckPlayerLost()
+    public void CheckPlayerHasntRunOutOfTime()
     {
-        if (lTime.currentTime <= 0 || !player.alive)
+        if (lTime.currentTime <= 0)
         {
-            wc.playerLost = true;
-            pMenu.Pause(false);
-            UIMenus.LoseMenu();
+            PlayerLose();
         }
+    }
+
+    public void PlayerLose()
+    {
+        wc.playerLost = true;
+        pMenu.Pause(false);
+        UIMenus.LoseMenu();
     }
 
     public void PlayerWin()

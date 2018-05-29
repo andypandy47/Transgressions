@@ -6,6 +6,7 @@ public class WinConditions : MonoBehaviour {
 
     LevelTimer lTime;
     LevelManager lManager;
+    TurretManager tManager;
 
     public bool targetKilled;
     public bool reachedExit;
@@ -36,6 +37,7 @@ public class WinConditions : MonoBehaviour {
     {
         lTime = GetComponent<LevelTimer>();
         lManager = GetComponent<LevelManager>();
+        tManager = GetComponent<TurretManager>();
         enemyGameObjects = GameObject.FindGameObjectsWithTag("Enemy");
 
         allEnemies = new Enemy[enemyGameObjects.Length];
@@ -74,6 +76,7 @@ public class WinConditions : MonoBehaviour {
                         targetKilled = true;
                         print("Target is dead");
                         ActivateExitPoint();
+                        tManager.ActivateTurrets();
                     }
                 }
             }
