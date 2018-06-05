@@ -76,7 +76,6 @@ public class WinConditions : MonoBehaviour {
                         targetKilled = true;
                         print("Target is dead");
                         ActivateExitPoint();
-                        tManager.ActivateTurrets();
                     }
                 }
             }

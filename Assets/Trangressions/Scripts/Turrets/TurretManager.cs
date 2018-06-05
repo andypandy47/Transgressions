@@ -25,11 +25,4 @@ public class TurretManager : MonoBehaviour {
         }
     }
 
-    public void ActivateTurrets()
-    {
-        for (int i = 0; i < turrets.Length; i++)
-        {
-            turrets[i].activated = true;
-        }
-    }
 }

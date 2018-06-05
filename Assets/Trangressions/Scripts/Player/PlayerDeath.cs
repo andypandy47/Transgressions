@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerDeath : MonoBehaviour {
 
     LevelManager lManager;
-    SpriteRenderer sRend;
+    public SpriteRenderer[] sRend = new SpriteRenderer[3];
     Player player;
 
     public static PlayerDeath instance;
@@ -20,21 +20,26 @@ public class PlayerDeath : MonoBehaviour {
 
     private void Start()
     {
-        sRend = GetComponent<SpriteRenderer>();
         lManager = GameObject.FindGameObjectWithTag("LevelManager").GetComponent<LevelManager>();
-        player = GetComponent<Player>(); 
+        player = GetComponent<Player>();
     }
 
     public IEnumerator PlayerDead()
     {
-        sRend.enabled = false;
+        for (int i = 0; i < sRend.Length; i++)
+        {
+            sRend[i].enabled = false;
+        }
+
         player.alive = false;
 
         GameObject chunkEffect = ObjectPooler.sharedInstance.GetPooledObject("PlayerDeathChunks");
         chunkEffect.transform.position = transform.position;
         chunkEffect.SetActive(true);
-        yield return new WaitForSeconds(1f);
         lManager.PlayerLose();
+        print("Playerdead");
+        yield return new WaitForSeconds(3f);
+        chunkEffect.SetActive(false);
 
     }
 }

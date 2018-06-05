@@ -75,12 +75,14 @@ public class LevelManager : MonoBehaviour {
         wc.playerLost = true;
         pMenu.Pause(false);
         UIMenus.LoseMenu();
+        AudioManager.instance.StopTurrets();
     }
 
     public void PlayerWin()
     {
         pMenu.Pause(false);
         UIMenus.WinMenu(sCalc.levelCompleteScore, sCalc.CalculateTimeScore(), sCalc.killScore, sCalc.CalculateRank());
+        AudioManager.instance.StopTurrets();
     }
 
     public IEnumerator RestartLevel()
@@ -95,6 +97,7 @@ public class LevelManager : MonoBehaviour {
         tManager.ResetTurrets();
         sCalc.ResetScore();
         ObjectPooler.sharedInstance.DeactivatePooledObjects();
+        AudioManager.instance.ResetSFX();
 
         pMenu.Resume();
         yield return new WaitForSeconds(0.1f);

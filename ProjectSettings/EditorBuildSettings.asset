@@ -31,4 +31,10 @@ EditorBuildSettings:
     guid: cb874d4a56c3de24f973dfc016a41924
   - enabled: 1
     path: Assets/Scenes/Sections/Section2/2-d.unity
+    guid: f7b7651514e9d2c45ac483c684e095af
+  - enabled: 1
+    path: Assets/Scenes/Sections/Section3/3-a.unity
+    guid: 1ab6114de981f6f4db32c257076043c4
+  - enabled: 1
+    path: Assets/Scenes/Sections/Section3/3-d.unity
     guid: eeb8f5bfbad499c478dd90d69f6c31d4

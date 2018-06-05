@@ -48,7 +48,6 @@ GameObject:
   - component: {fileID: 114427441899101116}
   - component: {fileID: 95129306742357764}
   - component: {fileID: 212889211905346904}
-  - component: {fileID: 50705503071610976}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -113,6 +112,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4266075785072024}
   - component: {fileID: 70763181402420236}
+  - component: {fileID: 50313482152487098}
   m_Layer: 13
   m_Name: PlayerCollision
   m_TagString: PlayerCollider
@@ -192,7 +192,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1440477903142126}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -17.5, y: -19.77, z: 0}
+  m_LocalPosition: {x: -17.5, y: -19.284, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4231057419347044}
@@ -203,13 +203,13 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!50 &50705503071610976
+--- !u!50 &50313482152487098
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1440477903142126}
+  m_GameObject: {fileID: 1822120503310158}
   m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
@@ -418,6 +418,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d3905a1251974745a3252e5f7a98a33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sRend:
+  - {fileID: 212889211905346904}
+  - {fileID: 212755068233750248}
+  - {fileID: 212829321985462928}
 --- !u!114 &114768691038811084
 MonoBehaviour:
   m_ObjectHideFlags: 1

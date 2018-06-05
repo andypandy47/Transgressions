@@ -5,25 +5,20 @@ using UnityEngine.SceneManagement;
 
 public class MissionSelect : MonoBehaviour {
 
+    UISounds UISounds;
 
-    #region IntroLevels
-
-    public void Intro_Level01()
+    private void Start()
     {
-        SceneManager.LoadScene("Intro_01", LoadSceneMode.Single);
-        MusicManager.instance.GamePlayStart();
-    }
-
-    public void Intro_Level02()
-    {
-        SceneManager.LoadScene("Intro_02", LoadSceneMode.Single);
-        MusicManager.instance.GamePlayStart();
+        UISounds = GetComponent<UISounds>();
     }
 
     public void SelectMission(string level)
     {
+        //TODO: Check to see if level is actually playable
+        //if not then play error sound instead
+        UISounds.LevelSelectSound();
         SceneManager.LoadScene(level, LoadSceneMode.Single);
         MusicManager.instance.GamePlayStart();
     }
-    #endregion
+
 }

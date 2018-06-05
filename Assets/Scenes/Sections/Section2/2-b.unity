@@ -510,31 +510,6 @@ Transform:
   m_PrefabParentObject: {fileID: 4739102203780610, guid: 26c1208bb112f86428855e6eb31b0648,
     type: 2}
   m_PrefabInternal: {fileID: 402751422}
---- !u!1 &608208067 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1822120503310158, guid: 28269c6232848df469a514f9dbc3cc85,
-    type: 2}
-  m_PrefabInternal: {fileID: 1363954070}
---- !u!50 &608208070
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 608208067}
-  m_BodyType: 1
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!1001 &663799598
 Prefab:
   m_ObjectHideFlags: 0
@@ -1105,28 +1080,7 @@ Prefab:
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
-    - target: {fileID: 114971150115795432, guid: 28269c6232848df469a514f9dbc3cc85,
-        type: 2}
-      propertyPath: whatToHit.m_Bits
-      value: 2048
-      objectReference: {fileID: 0}
-    - target: {fileID: 61638997136265476, guid: 28269c6232848df469a514f9dbc3cc85,
-        type: 2}
-      propertyPath: m_Offset.x
-      value: -0.03197372
-      objectReference: {fileID: 0}
-    - target: {fileID: 61638997136265476, guid: 28269c6232848df469a514f9dbc3cc85,
-        type: 2}
-      propertyPath: m_Size.x
-      value: 0.4481809
-      objectReference: {fileID: 0}
-    - target: {fileID: 114182138543745300, guid: 28269c6232848df469a514f9dbc3cc85,
-        type: 2}
-      propertyPath: groundAccelIncreaseAmount
-      value: 0.03
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 50705503071610976, guid: 28269c6232848df469a514f9dbc3cc85, type: 2}
+    m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 28269c6232848df469a514f9dbc3cc85, type: 2}
   m_IsPrefabParent: 0
 --- !u!1001 &1398005373

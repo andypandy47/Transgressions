@@ -26,7 +26,6 @@ public class Turret : MonoBehaviour {
 
     [HideInInspector]
     public bool canFire, firing, playerInRange, playerInSight, playerBehindWall, reset;
-    public bool activated;
 
     [HideInInspector]
     public Vector3 dirToTarget, dirToPlayer;
@@ -44,6 +43,7 @@ public class Turret : MonoBehaviour {
         timeToFire = fireRate;
         timeToReturnToNormalPos = aggroTime;
         playerInSight = true;
+        canFire = false;
         tRange = 9999;
     }
 
@@ -54,12 +54,8 @@ public class Turret : MonoBehaviour {
             print("target is null");
             return;
         }
-
-        if (activated)
-        {
-            CheckForAgrro();
-            CoolDownTime();
-        }
+        CheckForAgrro();
+        CoolDownTime();
         
     }
 
@@ -77,7 +73,7 @@ public class Turret : MonoBehaviour {
         dirToPlayer = player.position - transform.position;
         angleToPlayer = Mathf.Atan2(dirToPlayer.y, dirToPlayer.x) * Mathf.Deg2Rad;
 
-        CheckPlayerNotBehindWall(dirToPlayer, distanceToPlayer, .3f);
+        //CheckPlayerNotBehindWall(dirToPlayer, distanceToPlayer, .3f);
         CheckPlayerWithinAngleBounds(angleToPlayer, angleClamp.x, angleClamp.y);
     }
 
@@ -103,7 +99,7 @@ public class Turret : MonoBehaviour {
                 {
                     playerBehindWall = true;
                     //tRange = hit.distance;
-                    //print("Player is behind wall, dont fire");
+                    print("Player is behind wall, dont fire");
                 }
             }
 
@@ -146,17 +142,11 @@ public class Turret : MonoBehaviour {
                 angle = max;
             }
             playerInSight = false;
-            //print("player is not in sight");
+            print("player is not in sight " + angleToPlayer );
         }
         else
         {
-            if (!playerBehindWall)
-            {
-                playerInSight = true;
-                //print("player is in sight, follow");
-            }
-            else
-                playerInSight = false;
+            playerInSight = true;
         }
 
         return playerInSight;
@@ -165,12 +155,10 @@ public class Turret : MonoBehaviour {
     void CoolDownTime()
     {
         //If turret cannot fire and target is in range and target is in sight
-        if (!canFire && playerInRange && playerInSight && !firing)
+        if (playerInRange && playerInSight && !firing)
         {
             //Reduce time until it can fire next
             timeToFire -= Time.deltaTime;
-            if (timeToFire <= 0)
-                canFire = true;
         }
         else if (!playerInRange || !playerInSight)
         {
@@ -182,16 +170,8 @@ public class Turret : MonoBehaviour {
     public void ResetTurret()
     {
         reset = true;
-        activated = false;
         transform.rotation = Quaternion.Euler(0, 0, idleAngle);
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(firePoint.transform.position, range);
-
-        //Gizmos.color = Color.green;
-        Gizmos.DrawLine(transform.position + Vector3.left * 2, transform.position + Vector3.right * 2);
-    }
+    
 }
